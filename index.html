@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hodgepodge - your people know people</title>
+  <meta name="description" content="A trust-based dining app. Hosts curate intimate tables and invite guests through a friends-of-friends social graph. Every seat is hand-picked." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #1A0F14;
+      --surface:  #2A1520;
+      --surface2: #351a28;
+      --fig:      #5C2D4A;
+      --teal:     #5B9E96;
+      --violet:   #9B8FC8;
+      --crimson:  #C45050;
+      --cream:    #EDE8DF;
+      --cream-mid: rgba(237,232,223,0.55);
+      --cream-low: rgba(237,232,223,0.3);
+      --cream-faint: rgba(237,232,223,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(26,15,20,0.95) 0%, transparent 100%);
+    }
+
+    .nav-logo {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 22px;
+      color: var(--cream);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-cta {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--cream);
+      background: var(--fig);
+      border: none;
+      border-radius: 100px;
+      padding: 10px 22px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      overflow: hidden;
+    }
+
+    /* Decorative orbs */
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(92,45,74,0.35) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .orb-teal {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(91,158,150,0.12) 0%, transparent 70%);
+      bottom: -100px;
+      right: -80px;
+      pointer-events: none;
+    }
+
+    .orb-violet {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(155,143,200,0.1) 0%, transparent 70%);
+      top: 100px;
+      left: -60px;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--violet);
+      text-transform: lowercase;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-headline {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--cream);
+      margin-bottom: 28px;
+      max-width: 900px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 300;
+      color: var(--cream-mid);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.6s;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.8s;
+    }
+
+    .btn-primary {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--cream);
+      background: var(--fig);
+      border: none;
+      border-radius: 100px;
+      padding: 14px 32px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-1px); opacity: 0.9; }
+
+    .btn-ghost {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--cream-mid);
+      background: none;
+      border: 0.5px solid rgba(237,232,223,0.2);
+      border-radius: 100px;
+      padding: 14px 32px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(237,232,223,0.4); color: var(--cream); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 1.2s;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--cream-low), transparent);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .section {
+      position: relative;
+      z-index: 1;
+      padding: 120px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      color: var(--violet);
+      text-transform: lowercase;
+      margin-bottom: 20px;
+    }
+
+    .section-headline {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      margin-bottom: 64px;
+      max-width: 600px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .step {
+      background: var(--surface);
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .step:hover { background: var(--surface2); }
+
+    .step:first-child { border-radius: 16px 0 0 16px; }
+    .step:last-child  { border-radius: 0 16px 16px 0; }
+
+    .step-num {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--cream-faint);
+      margin-bottom: 24px;
+      letter-spacing: -0.04em;
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--cream);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .step-body {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--cream-mid);
+      line-height: 1.7;
+    }
+
+    .step-accent {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 2px;
+      width: 100%;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .step:hover .step-accent { opacity: 1; }
+    .step:nth-child(1) .step-accent { background: var(--fig); }
+    .step:nth-child(2) .step-accent { background: var(--teal); }
+    .step:nth-child(3) .step-accent { background: var(--violet); }
+
+    /* ── TRUST SECTION ── */
+    .trust-section {
+      position: relative;
+      z-index: 1;
+      padding: 80px 24px 120px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .trust-card {
+      background: var(--surface);
+      padding: 48px;
+      transition: background 0.3s;
+    }
+    .trust-card:hover { background: var(--surface2); }
+    .trust-card:first-child { border-radius: 16px 0 0 16px; }
+    .trust-card:last-child  { border-radius: 0 16px 16px 0; }
+
+    .trust-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 24px;
+    }
+
+    .trust-title {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--cream);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .trust-body {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--cream-mid);
+      line-height: 1.8;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 0.5px;
+      background: rgba(237,232,223,0.08);
+      margin: 0 24px;
+    }
+
+    /* ── WAITLIST / OPT-IN ── */
+    .waitlist-section {
+      position: relative;
+      z-index: 1;
+      padding: 120px 24px;
+      text-align: center;
+    }
+
+    .waitlist-inner {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    .waitlist-headline {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      margin-bottom: 16px;
+    }
+
+    .waitlist-sub {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--cream-mid);
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+
+    .waitlist-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .form-input {
+      flex: 1;
+      background: var(--surface);
+      border: 0.5px solid rgba(237,232,223,0.15);
+      border-radius: 100px;
+      padding: 14px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input::placeholder { color: var(--cream-low); }
+    .form-input:focus { border-color: rgba(155,143,200,0.5); }
+
+    .form-submit {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--cream);
+      background: var(--fig);
+      border: none;
+      border-radius: 100px;
+      padding: 14px 28px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .form-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    .consent-text {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--cream-low);
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .consent-text a {
+      color: var(--cream-low);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .consent-text a:hover { color: var(--cream-mid); }
+
+    .form-success {
+      display: none;
+      background: var(--surface);
+      border: 0.5px solid rgba(155,143,200,0.3);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .form-success p {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 22px;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+
+    .form-success span {
+      font-size: 13px;
+      color: var(--cream-mid);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 0.5px solid rgba(237,232,223,0.08);
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: var(--cream-mid);
+      text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .footer-links a {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--cream-low);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--cream-mid); }
+
+    .footer-copy {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--cream-low);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+      .step:first-child { border-radius: 16px 16px 0 0; }
+      .step:last-child  { border-radius: 0 0 16px 16px; }
+
+      .trust-grid {
+        grid-template-columns: 1fr;
+      }
+      .trust-card:first-child { border-radius: 16px 16px 0 0; }
+      .trust-card:last-child  { border-radius: 0 0 16px 16px; }
+
+      .form-row { flex-direction: column; }
+
+      footer {
+        padding: 32px 24px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 24px;
+      }
+
+      .footer-links { flex-wrap: wrap; gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="/">hodgepodge</a>
+    <a class="nav-cta" href="#waitlist">join the waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="orb-teal"></div>
+    <div class="orb-violet"></div>
+
+    <p class="hero-eyebrow">new york city · coming soon</p>
+    <h1 class="hero-headline">your people<br>know people.</h1>
+    <p class="hero-sub">
+      hodgepodge is a trust-based dining app. hosts curate intimate tables and invite guests through a friends-of-friends social graph. every seat is hand-picked.
+    </p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#waitlist">save your seat</a>
+      <a class="btn-ghost" href="#how-it-works">how it works</a>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how-it-works">
+    <p class="section-eyebrow">how it works</p>
+    <h2 class="section-headline">the best nights start with a saved seat.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">hosts set the table.</div>
+        <p class="step-body">create an intimate table for 4–8 people - a dinner, drinks, brunch, or experience. invite guests from your network. the app handles the rest.</p>
+        <div class="step-accent"></div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">guests are hand-picked.</div>
+        <p class="step-body">you're only invited if you're a connection or a mutual of someone already at the table. no open seats. no strangers. only people one degree away from someone you trust.</p>
+        <div class="step-accent"></div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">connections follow.</div>
+        <p class="step-body">after every table, reconnect with the people you met. your circle grows one shared dinner at a time. the best nights leave you with a few new people worth knowing.</p>
+        <div class="step-accent"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TRUST -->
+  <section class="trust-section">
+    <div class="trust-grid">
+      <div class="trust-card">
+        <svg class="trust-icon" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="19" stroke="rgba(155,143,200,0.4)" stroke-width="1"/>
+          <circle cx="20" cy="20" r="12" stroke="rgba(155,143,200,0.25)" stroke-width="1"/>
+          <circle cx="20" cy="20" r="5" fill="rgba(155,143,200,0.5)"/>
+        </svg>
+        <h3 class="trust-title">save a seat for someone you almost know.</h3>
+        <p class="trust-body">the people one degree away from you are already pre-vetted by someone you trust. hodgepodge makes that invisible connection visible - and turns it into an evening worth remembering.</p>
+      </div>
+      <div class="trust-card">
+        <svg class="trust-icon" viewBox="0 0 40 40" fill="none">
+          <path d="M8 32 L20 8 L32 32" stroke="rgba(91,158,150,0.5)" stroke-width="1" stroke-linejoin="round"/>
+          <path d="M12 24 L28 24" stroke="rgba(91,158,150,0.3)" stroke-width="1"/>
+          <circle cx="20" cy="8" r="2" fill="rgba(91,158,150,0.6)"/>
+          <circle cx="8" cy="32" r="2" fill="rgba(91,158,150,0.4)"/>
+          <circle cx="32" cy="32" r="2" fill="rgba(91,158,150,0.4)"/>
+        </svg>
+        <h3 class="trust-title">depth over reach.</h3>
+        <p class="trust-body">no feed. no likes. no algorithm. hodgepodge is a concierge, not a platform. it works quietly in the background so the dinner itself can be the whole thing - no phones, just people.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- WAITLIST -->
+  <section class="waitlist-section" id="waitlist">
+    <div class="waitlist-inner">
+      <p class="section-eyebrow" style="text-align:center; margin-bottom:20px;">join the waitlist</p>
+      <h2 class="waitlist-headline">your friends' friends are waiting.</h2>
+      <p class="waitlist-sub">
+        we're launching in new york city with a small group of hosts. enter your number and we'll text you when your city opens up.
+      </p>
+
+      <div class="waitlist-form" id="waitlist-form">
+        <div class="form-row">
+          <input class="form-input" type="text" placeholder="your name" id="input-name" autocomplete="name" />
+        </div>
+        <div class="form-row">
+          <input class="form-input" type="tel" placeholder="phone number" id="input-phone" autocomplete="tel" />
+          <button class="form-submit" onclick="handleSubmit()">join</button>
+        </div>
+      </div>
+
+      <div class="form-success" id="form-success">
+        <p>you're on the list.</p>
+        <span>we'll text you when hodgepodge opens in your city. see you at the table.</span>
+      </div>
+
+      <p class="consent-text">
+        by submitting your number, you agree to receive SMS messages from hodgepodge, including a one-time confirmation text and occasional updates about your waitlist status. message &amp; data rates may apply. reply STOP to opt out at any time. view our <a href="/privacy" target="_blank">privacy policy</a> and <a href="/terms" target="_blank">terms of service</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a class="footer-logo" href="/">hodgepodge</a>
+    <div class="footer-links">
+      <a href="#how-it-works">how it works</a>
+      <a href="#waitlist">join waitlist</a>
+      <a href="/cdn-cgi/l/email-protection#620a070e0e0d220a0d060507120d0605074c110d010b030e"><span class="__cf_email__" data-cfemail="036b666f6f6c436b6c676466736c6764662d706c606a626f">[email&#160;protected]</span></a>
+      <a href="/privacy" target="_blank">privacy policy</a>
+      <a href="/terms" target="_blank">terms</a>
+    </div>
+    <p class="footer-copy">© 2026 hodgepodge</p>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    function handleSubmit() {
+      const name = document.getElementById('input-name').value.trim();
+      const phone = document.getElementById('input-phone').value.trim();
+      if (!name || !phone) {
+        document.getElementById('input-name').style.borderColor = !name ? 'rgba(196,80,80,0.5)' : '';
+        document.getElementById('input-phone').style.borderColor = !phone ? 'rgba(196,80,80,0.5)' : '';
+        return;
+      }
+      document.getElementById('waitlist-form').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    }
+
+    // Subtle scroll-based nav bg
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 60) {
+        nav.style.background = 'rgba(26,15,20,0.97)';
+        nav.style.backdropFilter = 'blur(12px)';
+      } else {
+        nav.style.background = 'linear-gradient(to bottom, rgba(26,15,20,0.95) 0%, transparent 100%)';
+        nav.style.backdropFilter = 'none';
+      }
+    });
+
+    // Intersection observer for step animations
+    const steps = document.querySelectorAll('.step, .trust-card');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          e.target
