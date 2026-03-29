@@ -686,16 +686,44 @@
   </footer>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    function handleSubmit() {
+    async function handleSubmit() {
       const name = document.getElementById('input-name').value.trim();
       const phone = document.getElementById('input-phone').value.trim();
+      const btn = document.querySelector('.form-submit');
+
       if (!name || !phone) {
         document.getElementById('input-name').style.borderColor = !name ? 'rgba(196,80,80,0.5)' : '';
         document.getElementById('input-phone').style.borderColor = !phone ? 'rgba(196,80,80,0.5)' : '';
         return;
       }
-      document.getElementById('waitlist-form').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
+
+      btn.textContent = 'saving...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('https://ngakgswqbbyoaaqklqep.supabase.co/rest/v1/waitlist', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nYWtnc3dxYmJ5b2FhcWtscWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzkzODksImV4cCI6MjA4OTQ1NTM4OX0.YE6LBHIOy_W6Nsqn2rSy1LLhei7e4lW-xyVeqAysw7A',
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nYWtnc3dxYmJ5b2FhcWtscWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzkzODksImV4cCI6MjA4OTQ1NTM4OX0.YE6LBHIOy_W6Nsqn2rSy1LLhei7e4lW-xyVeqAysw7A',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ name, phone })
+        });
+
+        if (res.ok || res.status === 201) {
+          document.getElementById('waitlist-form').style.display = 'none';
+          document.getElementById('form-success').style.display = 'block';
+        } else {
+          throw new Error('submission failed');
+        }
+      } catch (e) {
+        btn.textContent = 'join';
+        btn.disabled = false;
+        document.getElementById('input-phone').style.borderColor = 'rgba(196,80,80,0.5)';
+        document.getElementById('input-phone').placeholder = 'something went wrong. try again.';
+      }
     }
 
     // Subtle scroll-based nav bg
