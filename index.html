@@ -701,13 +701,16 @@
       btn.disabled = true;
 
       try {
-        const res = await fetch('https://ngakgswqbbyoaaqklqep.supabase.co/rest/v1/waitlist', {
+        const SUPABASE_URL = 'https://ngakgswqbbyoaaqklqep.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nYWtnc3dxYmJ5b2FhcWtscWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzkzODksImV4cCI6MjA4OTQ1NTM4OX0.YE6LBHIOy_W6Nsqn2rSy1LLhei7e4lW-xyVeqAysw7A';
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nYWtnc3dxYmJ5b2FhcWtscWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzkzODksImV4cCI6MjA4OTQ1NTM4OX0.YE6LBHIOy_W6Nsqn2rSy1LLhei7e4lW-xyVeqAysw7A',
-            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5nYWtnc3dxYmJ5b2FhcWtscWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NzkzODksImV4cCI6MjA4OTQ1NTM4OX0.YE6LBHIOy_W6Nsqn2rSy1LLhei7e4lW-xyVeqAysw7A',
-            'Prefer': 'return=minimal'
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Prefer': 'return=minimal',
+            'x-client-info': 'hodgepodge-site'
           },
           body: JSON.stringify({ name, phone })
         });
