@@ -686,7 +686,7 @@
   </footer>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-    async function handleSubmit() {
+    window.handleSubmit = async function() {
       const name = document.getElementById('input-name').value.trim();
       const phone = document.getElementById('input-phone').value.trim();
       const btn = document.querySelector('.form-submit');
