@@ -95,7 +95,6 @@
       overflow: hidden;
     }
 
-    /* Decorative orbs */
     .hero::after {
       content: '';
       position: absolute;
@@ -401,7 +400,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .form-row {
@@ -440,21 +439,81 @@
     }
     .form-submit:hover { opacity: 0.9; transform: translateY(-1px); }
 
-    .consent-text {
+    /* ── SMS OPT-IN CHECKBOX ── */
+    .sms-opt-in {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      text-align: left;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .sms-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      border: 0.5px solid rgba(237,232,223,0.3);
+      border-radius: 4px;
+      background: var(--surface);
+      cursor: pointer;
+      margin-top: 2px;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+
+    .sms-checkbox:checked {
+      background: var(--fig);
+      border-color: var(--fig);
+    }
+
+    .sms-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: 1.5px solid var(--cream);
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .sms-checkbox:focus { outline: none; border-color: var(--violet); }
+
+    .sms-opt-in-label {
       font-size: 12px;
       font-weight: 300;
       color: var(--cream-low);
-      line-height: 1.7;
+      line-height: 1.6;
+      cursor: pointer;
+    }
+
+    .sms-opt-in-label a {
+      color: var(--cream-low);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .sms-opt-in-label a:hover { color: var(--cream-mid); }
+
+    .consent-text {
+      font-size: 11px;
+      font-weight: 300;
+      color: rgba(237,232,223,0.2);
+      line-height: 1.6;
       max-width: 480px;
       margin: 0 auto;
     }
 
     .consent-text a {
-      color: var(--cream-low);
+      color: rgba(237,232,223,0.2);
       text-decoration: underline;
       text-underline-offset: 3px;
     }
-    .consent-text a:hover { color: var(--cream-mid); }
+    .consent-text a:hover { color: var(--cream-low); }
 
     .form-success {
       display: none;
@@ -659,6 +718,14 @@
           <input class="form-input" type="tel" placeholder="phone number" id="input-phone" autocomplete="tel" />
           <button class="form-submit" onclick="handleSubmit()">join</button>
         </div>
+
+        <!-- SMS OPT-IN CHECKBOX — separate, unchecked by default, optional -->
+        <div class="sms-opt-in">
+          <input type="checkbox" class="sms-checkbox" id="sms-consent" />
+          <label class="sms-opt-in-label" for="sms-consent">
+            yes, text me when my seat opens up. by checking this box, i agree to receive SMS messages from hodgepodge, including waitlist updates and table notifications. message &amp; data rates may apply. reply STOP to opt out at any time. view our <a href="/privacy" target="_blank">privacy policy</a> and <a href="/terms" target="_blank">terms of service</a>.
+          </label>
+        </div>
       </div>
 
       <div class="form-success" id="form-success">
@@ -667,7 +734,7 @@
       </div>
 
       <p class="consent-text">
-        by submitting your number, you may opt in to receive SMS messages from hodgepodge, including a one-time confirmation and waitlist status updates. SMS is optional and not required to join the waitlist. message &amp; data rates may apply. reply STOP to opt out at any time. view our <a href="/privacy" target="_blank">privacy policy</a> and <a href="/terms" target="_blank">terms of service</a>.
+        SMS is optional. your number is used to notify you when your seat opens up, only if you opt in above. mobile opt-in data is never shared with third parties.
       </p>
     </div>
   </section>
@@ -678,7 +745,7 @@
     <div class="footer-links">
       <a href="#how-it-works">how it works</a>
       <a href="#waitlist">join waitlist</a>
-      <a href="/cdn-cgi/l/email-protection#620a070e0e0d220a0d060507120d0605074c110d010b030e"><span class="__cf_email__" data-cfemail="036b666f6f6c436b6c676466736c6764662d706c606a626f">[email&#160;protected]</span></a>
+      <a href="mailto:hello@hodgepodge.social">hello@hodgepodge.social</a>
       <a href="/privacy" target="_blank">privacy policy</a>
       <a href="/terms" target="_blank">terms</a>
     </div>
@@ -689,6 +756,7 @@
     window.handleSubmit = async function() {
       const name = document.getElementById('input-name').value.trim();
       const phone = document.getElementById('input-phone').value.trim();
+      const smsConsent = document.getElementById('sms-consent').checked;
       const btn = document.querySelector('.form-submit');
 
       if (!name || !phone) {
@@ -711,7 +779,7 @@
             'Authorization': 'Bearer ' + SUPABASE_KEY,
             'Prefer': 'return=minimal'
           },
-          body: JSON.stringify({ name: name, phone: phone })
+          body: JSON.stringify({ name: name, phone: phone, sms_consent: smsConsent })
         });
 
         if (res.ok || res.status === 201) {
