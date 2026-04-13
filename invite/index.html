@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>you're invited — hodgepodge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,700&family=DM+Sans:wght@300;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --fig: #5C2D4A;
+      --teal: #5B9E96;
+      --violet: #9B8FC8;
+      --crimson: #C45050;
+      --bg: #1A0F14;
+      --surface: #2A1520;
+      --cream: #EDE8DF;
+      --cream-dim: rgba(237,232,223,0.5);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px 64px;
+    }
+
+    .wordmark {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--cream);
+      margin-bottom: 40px;
+      letter-spacing: 0.01em;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 16px;
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: lowercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .pill-dinner  { background: var(--fig);    color: #E8A0C8; }
+    .pill-drinks  { background: var(--teal);   color: #1A0F14; }
+    .pill-brunch  { background: var(--violet); color: #1A0F14; }
+    .pill-experience { background: rgba(255,255,255,0.15); color: var(--cream); }
+
+    .table-name {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 1.2;
+      color: var(--cream);
+      margin-bottom: 8px;
+    }
+
+    .host-line {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--cream-dim);
+      margin-bottom: 20px;
+    }
+
+    .host-line span {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--cream);
+      margin-bottom: 10px;
+    }
+
+    .meta-row .icon { font-size: 15px; }
+
+    .divider {
+      height: 1px;
+      background: rgba(237,232,223,0.08);
+      margin: 20px 0;
+    }
+
+    .guests-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--cream-dim);
+      text-transform: lowercase;
+      margin-bottom: 12px;
+    }
+
+    .guest-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .guest-chip {
+      background: rgba(237,232,223,0.08);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--cream);
+    }
+
+    .seats-line {
+      font-size: 12px;
+      color: var(--cream-dim);
+      margin-top: 10px;
+    }
+
+    .seats-line.low { color: var(--crimson); }
+
+    /* RSVP form */
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--cream-dim);
+      text-transform: lowercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .form-input {
+      width: 100%;
+      background: rgba(237,232,223,0.06);
+      border: 1px solid rgba(237,232,223,0.12);
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      color: var(--cream);
+      outline: none;
+      margin-bottom: 14px;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus {
+      border-color: rgba(237,232,223,0.3);
+    }
+
+    .form-input::placeholder { color: var(--cream-dim); }
+
+    .btn-rsvp {
+      width: 100%;
+      background: var(--teal);
+      color: #1A0F14;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: opacity 0.15s;
+    }
+
+    .btn-rsvp:disabled { opacity: 0.4; cursor: default; }
+
+    .error-msg {
+      font-size: 13px;
+      color: var(--crimson);
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    /* confirmation state */
+    .confirmation { text-align: center; padding: 8px 0; }
+
+    .confirmation .check {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    .confirmation h2 {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .confirmation p {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--cream-dim);
+      line-height: 1.5;
+    }
+
+    /* app download nudge */
+    .nudge {
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .nudge p {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--cream-dim);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .btn-download {
+      display: inline-block;
+      background: transparent;
+      border: 1px solid rgba(237,232,223,0.2);
+      border-radius: 12px;
+      padding: 13px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--cream);
+      text-decoration: none;
+      transition: border-color 0.15s;
+    }
+
+    .btn-download:hover { border-color: rgba(237,232,223,0.5); }
+
+    /* loading / error states */
+    .state-msg {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--cream-dim);
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="wordmark">hodgepodge</div>
+
+  <div id="loading" class="state-msg">loading your invite...</div>
+  <div id="invalid" class="state-msg hidden">this invite link is no longer valid.</div>
+
+  <div id="main" class="hidden" style="width:100%;max-width:400px;">
+    <!-- table info card -->
+    <div class="card">
+      <div id="activity-pill" class="pill"></div>
+      <div id="table-name" class="table-name"></div>
+      <div id="host-line" class="host-line">hosted by <span id="host-name"></span></div>
+      <div class="meta-row"><span class="icon">📅</span><span id="meta-date"></span></div>
+      <div class="meta-row"><span class="icon">📍</span><span id="meta-venue"></span></div>
+      <div class="meta-row"><span class="icon">🪑</span><span id="meta-seats"></span></div>
+      <div id="guests-section" class="hidden">
+        <div class="divider"></div>
+        <div class="guests-label">who's coming</div>
+        <div id="guest-chips" class="guest-chips"></div>
+      </div>
+    </div>
+
+    <!-- rsvp card -->
+    <div class="card" id="rsvp-card">
+      <label class="form-label" for="input-name">your name</label>
+      <input class="form-input" id="input-name" type="text" placeholder="first name" autocomplete="given-name" />
+      <label class="form-label" for="input-phone">your phone number</label>
+      <input class="form-input" id="input-phone" type="tel" placeholder="+1 (555) 000-0000" autocomplete="tel" />
+      <button class="btn-rsvp" id="btn-rsvp">save my seat</button>
+      <div id="error-msg" class="error-msg hidden"></div>
+    </div>
+
+    <!-- confirmation (hidden until RSVP) -->
+    <div class="card hidden" id="confirmation-card">
+      <div class="confirmation">
+        <div class="check">🪑</div>
+        <h2>you're in.</h2>
+        <p>your seat is saved. see you there.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- app nudge (shown after RSVP) -->
+  <div class="nudge hidden" id="nudge">
+    <p>get the full experience on hodgepodge. see who else is coming, chat with your table, and build your circle.</p>
+    <a class="btn-download" href="https://testflight.apple.com/join/placeholder" id="download-link">get early access</a>
+  </div>
+
+  <script type="module">
+    const SUPABASE_URL = 'https://ngakgswqbbyoaaqklqep.supabase.co'
+    const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE'
+    const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/web-rsvp`
+
+    const token = location.pathname.split('/').filter(Boolean).pop()
+
+    const $ = id => document.getElementById(id)
+
+    async function fetchInvite() {
+      if (!token) { showInvalid(); return }
+
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/invite_links?token=eq.${token}&select=activity_id,activities(name,activity_type,date,venue_name,max_guests,host_id,profiles(name),guests(status,name,profiles(name)))`,
+        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+      )
+      const data = await res.json()
+
+      if (!data?.length) { showInvalid(); return }
+
+      const link = data[0]
+      const a = link.activities
+
+      // pill
+      const pill = $('activity-pill')
+      pill.textContent = a.activity_type
+      pill.className = `pill pill-${a.activity_type}`
+
+      // name + host
+      $('table-name').textContent = a.name
+      $('host-name').textContent = a.profiles?.name ?? 'your host'
+
+      // date
+      const date = new Date(a.date)
+      $('meta-date').textContent = date.toLocaleDateString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric',
+        hour: 'numeric', minute: '2-digit'
+      }).toLowerCase()
+
+      // venue
+      $('meta-venue').textContent = a.venue_name ?? 'venue tbc'
+
+      // seats
+      const accepted = (a.guests ?? []).filter(g => g.status === 'accepted')
+      const remaining = a.max_guests - accepted.length
+      const seatsEl = $('meta-seats')
+      seatsEl.textContent = remaining <= 0
+        ? 'table is full'
+        : remaining <= 2
+          ? `${remaining} seat${remaining === 1 ? '' : 's'} left`
+          : `${a.max_guests} seats`
+      if (remaining <= 2) seatsEl.closest('.meta-row').style.color = 'var(--crimson)'
+      if (remaining <= 0) { showFull(); return }
+
+      // confirmed guests (app members only — name from profiles)
+      const namedGuests = accepted
+        .map(g => g.profiles?.name ?? g.name)
+        .filter(Boolean)
+        .slice(0, 8)
+
+      if (namedGuests.length) {
+        const chips = $('guest-chips')
+        namedGuests.forEach(n => {
+          const chip = document.createElement('div')
+          chip.className = 'guest-chip'
+          chip.textContent = n.split(' ')[0].toLowerCase()
+          chips.appendChild(chip)
+        })
+        $('guests-section').classList.remove('hidden')
+      }
+
+      $('loading').classList.add('hidden')
+      $('main').classList.remove('hidden')
+    }
+
+    function showInvalid() {
+      $('loading').classList.add('hidden')
+      $('invalid').classList.remove('hidden')
+    }
+
+    function showFull() {
+      $('loading').classList.add('hidden')
+      $('main').classList.remove('hidden')
+      $('rsvp-card').classList.add('hidden')
+    }
+
+    // RSVP submit
+    $('btn-rsvp').addEventListener('click', async () => {
+      const name = $('input-name').value.trim()
+      const phone = $('input-phone').value.trim()
+      const errEl = $('error-msg')
+
+      if (!name || !phone) {
+        errEl.textContent = 'please enter your name and phone number'
+        errEl.classList.remove('hidden')
+        return
+      }
+
+      $('btn-rsvp').disabled = true
+      $('btn-rsvp').textContent = 'saving your seat...'
+      errEl.classList.add('hidden')
+
+      const res = await fetch(EDGE_FN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY },
+        body: JSON.stringify({ token, name, phone })
+      })
+      const body = await res.json()
+
+      if (!res.ok) {
+        const msgs = {
+          'already rsvped': 'looks like you already have a seat.',
+          'table is full': 'sorry, this table just filled up.',
+          'table no longer available': 'this table is no longer available.',
+          'invalid token': 'this invite link is no longer valid.',
+        }
+        errEl.textContent = msgs[body.error] ?? 'something went wrong. try again.'
+        errEl.classList.remove('hidden')
+        $('btn-rsvp').disabled = false
+        $('btn-rsvp').textContent = 'save my seat'
+        return
+      }
+
+      // success
+      $('rsvp-card').classList.add('hidden')
+      $('confirmation-card').classList.remove('hidden')
+      $('nudge').classList.remove('hidden')
+    })
+
+    fetchInvite()
+  </script>
+</body>
+</html>
