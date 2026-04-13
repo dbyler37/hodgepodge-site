@@ -63,9 +63,9 @@
       margin-bottom: 16px;
     }
 
-    .pill-dinner  { background: var(--fig);    color: #E8A0C8; }
-    .pill-drinks  { background: var(--teal);   color: #1A0F14; }
-    .pill-brunch  { background: var(--violet); color: #1A0F14; }
+    .pill-dinner     { background: var(--fig);    color: #E8A0C8; }
+    .pill-drinks     { background: var(--teal);   color: #1A0F14; }
+    .pill-brunch     { background: var(--violet); color: #1A0F14; }
     .pill-experience { background: rgba(255,255,255,0.15); color: var(--cream); }
 
     .table-name {
@@ -132,15 +132,6 @@
       color: var(--cream);
     }
 
-    .seats-line {
-      font-size: 12px;
-      color: var(--cream-dim);
-      margin-top: 10px;
-    }
-
-    .seats-line.low { color: var(--crimson); }
-
-    /* RSVP form */
     .form-label {
       font-size: 12px;
       font-weight: 500;
@@ -166,10 +157,7 @@
       -webkit-appearance: none;
     }
 
-    .form-input:focus {
-      border-color: rgba(237,232,223,0.3);
-    }
-
+    .form-input:focus { border-color: rgba(237,232,223,0.3); }
     .form-input::placeholder { color: var(--cream-dim); }
 
     .btn-rsvp {
@@ -196,7 +184,6 @@
       text-align: center;
     }
 
-    /* confirmation state */
     .confirmation { text-align: center; padding: 8px 0; }
 
     .confirmation .check {
@@ -219,7 +206,6 @@
       line-height: 1.5;
     }
 
-    /* app download nudge */
     .nudge {
       width: 100%;
       max-width: 400px;
@@ -251,7 +237,6 @@
 
     .btn-download:hover { border-color: rgba(237,232,223,0.5); }
 
-    /* loading / error states */
     .state-msg {
       font-size: 15px;
       font-weight: 300;
@@ -270,11 +255,10 @@
   <div id="invalid" class="state-msg hidden">this invite link is no longer valid.</div>
 
   <div id="main" class="hidden" style="width:100%;max-width:400px;">
-    <!-- table info card -->
     <div class="card">
       <div id="activity-pill" class="pill"></div>
       <div id="table-name" class="table-name"></div>
-      <div id="host-line" class="host-line">hosted by <span id="host-name"></span></div>
+      <div class="host-line">hosted by <span id="host-name"></span></div>
       <div class="meta-row"><span class="icon">📅</span><span id="meta-date"></span></div>
       <div class="meta-row"><span class="icon">📍</span><span id="meta-venue"></span></div>
       <div class="meta-row"><span class="icon">🪑</span><span id="meta-seats"></span></div>
@@ -285,7 +269,6 @@
       </div>
     </div>
 
-    <!-- rsvp card -->
     <div class="card" id="rsvp-card">
       <label class="form-label" for="input-name">your name</label>
       <input class="form-input" id="input-name" type="text" placeholder="first name" autocomplete="given-name" />
@@ -295,7 +278,6 @@
       <div id="error-msg" class="error-msg hidden"></div>
     </div>
 
-    <!-- confirmation (hidden until RSVP) -->
     <div class="card hidden" id="confirmation-card">
       <div class="confirmation">
         <div class="check">🪑</div>
@@ -305,7 +287,6 @@
     </div>
   </div>
 
-  <!-- app nudge (shown after RSVP) -->
   <div class="nudge hidden" id="nudge">
     <p>get the full experience on hodgepodge. see who else is coming, chat with your table, and build your circle.</p>
     <a class="btn-download" href="https://testflight.apple.com/join/placeholder" id="download-link">get early access</a>
@@ -317,44 +298,80 @@
     const EDGE_FN_URL = `${SUPABASE_URL}/functions/v1/web-rsvp`
 
     const token = location.pathname.split('/').filter(Boolean).pop()
-
     const $ = id => document.getElementById(id)
+
+    const headers = {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+    }
 
     async function fetchInvite() {
       if (!token) { showInvalid(); return }
 
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/invite_links?token=eq.${token}&select=activity_id,activities(name,activity_type,date,venue_name,max_guests,host_id,profiles(name),guests(status,name,profiles(name)))`,
-        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+      // 1. get activity_id from token
+      const linkRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/invite_links?token=eq.${token}&select=activity_id`,
+        { headers }
       )
-      const data = await res.json()
+      const linkData = await linkRes.json()
+      if (!linkData?.length) { showInvalid(); return }
+      const activityId = linkData[0].activity_id
 
-      if (!data?.length) { showInvalid(); return }
+      // 2. get activity
+      const actRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/activities?id=eq.${activityId}&select=id,name,activity_type,date,venue_name,max_guests,host_id`,
+        { headers }
+      )
+      const actData = await actRes.json()
+      if (!actData?.length) { showInvalid(); return }
+      const a = actData[0]
 
-      const link = data[0]
-      const a = link.activities
+      // 3. get host name
+      const hostRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/profiles?id=eq.${a.host_id}&select=name`,
+        { headers }
+      )
+      const hostData = await hostRes.json()
+      const hostName = hostData?.[0]?.name ?? 'your host'
 
-      // pill
+      // 4. get accepted guests
+      const guestsRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/guests?activity_id=eq.${activityId}&status=eq.accepted&select=name,user_id`,
+        { headers }
+      )
+      const guestsData = await guestsRes.json()
+      const accepted = guestsData ?? []
+
+      // 5. get names for app guests
+      const appGuestIds = accepted.filter(g => g.user_id).map(g => g.user_id)
+      let appGuestNames = []
+      if (appGuestIds.length) {
+        const profilesRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/profiles?id=in.(${appGuestIds.join(',')})&select=name`,
+          { headers }
+        )
+        const profilesData = await profilesRes.json()
+        appGuestNames = (profilesData ?? []).map(p => p.name)
+      }
+      const webGuestNames = accepted.filter(g => !g.user_id && g.name).map(g => g.name)
+      const allGuestNames = [...appGuestNames, ...webGuestNames]
+
+      // render pill
       const pill = $('activity-pill')
       pill.textContent = a.activity_type
       pill.className = `pill pill-${a.activity_type}`
 
-      // name + host
       $('table-name').textContent = a.name
-      $('host-name').textContent = a.profiles?.name ?? 'your host'
+      $('host-name').textContent = hostName
 
-      // date
       const date = new Date(a.date)
       $('meta-date').textContent = date.toLocaleDateString('en-US', {
         weekday: 'long', month: 'long', day: 'numeric',
         hour: 'numeric', minute: '2-digit'
       }).toLowerCase()
 
-      // venue
       $('meta-venue').textContent = a.venue_name ?? 'venue tbc'
 
-      // seats
-      const accepted = (a.guests ?? []).filter(g => g.status === 'accepted')
       const remaining = a.max_guests - accepted.length
       const seatsEl = $('meta-seats')
       seatsEl.textContent = remaining <= 0
@@ -365,12 +382,8 @@
       if (remaining <= 2) seatsEl.closest('.meta-row').style.color = 'var(--crimson)'
       if (remaining <= 0) { showFull(); return }
 
-      // confirmed guests (app members only — name from profiles)
-      const namedGuests = accepted
-        .map(g => g.profiles?.name ?? g.name)
-        .filter(Boolean)
-        .slice(0, 8)
-
+      // guest chips
+      const namedGuests = allGuestNames.filter(Boolean).slice(0, 8)
       if (namedGuests.length) {
         const chips = $('guest-chips')
         namedGuests.forEach(n => {
@@ -397,7 +410,6 @@
       $('rsvp-card').classList.add('hidden')
     }
 
-    // RSVP submit
     $('btn-rsvp').addEventListener('click', async () => {
       const name = $('input-name').value.trim()
       const phone = $('input-phone').value.trim()
@@ -434,7 +446,6 @@
         return
       }
 
-      // success
       $('rsvp-card').classList.add('hidden')
       $('confirmation-card').classList.remove('hidden')
       $('nudge').classList.remove('hidden')
