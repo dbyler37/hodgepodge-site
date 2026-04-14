@@ -336,7 +336,7 @@
 
       // 4. get accepted guests
       const guestsRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/guests?activity_id=eq.${activityId}&status=eq.accepted&select=name,user_id`,
+        `${SUPABASE_URL}/rest/v1/guests?activity_id=eq.${activityId}&status=eq.attending&select=name,user_id`,
         { headers }
       )
       const guestsData = await guestsRes.json()
