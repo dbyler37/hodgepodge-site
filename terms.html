@@ -3,146 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>terms of service - hodgepodge</title>
+  <title>terms of service — hodgepodge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #1A0F14;
-      --surface: #2A1520;
-      --fig: #5C2D4A;
-      --violet: #9B8FC8;
-      --cream: #EDE8DF;
-      --cream-mid: rgba(237,232,223,0.55);
-      --cream-low: rgba(237,232,223,0.3);
+      --bg: #1A0F14; --surface: #2A1520; --fig: #5C2D4A;
+      --violet: #9B8FC8; --cream: #EDE8DF;
+      --cream-mid: rgba(237,232,223,0.55); --cream-low: rgba(237,232,223,0.3);
     }
-    body {
-      background: var(--bg);
-      color: var(--cream);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.8;
-    }
-    nav {
-      padding: 24px 48px;
-      border-bottom: 0.5px solid rgba(237,232,223,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-logo {
-      font-family: 'Bodoni Moda', serif;
-      font-style: italic;
-      font-size: 22px;
-      color: var(--cream);
-      text-decoration: none;
-    }
-    .nav-back {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--cream-mid);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
+    body { background: var(--bg); color: var(--cream); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.8; }
+    nav { padding: 24px 48px; border-bottom: 0.5px solid rgba(237,232,223,0.08); display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 22px; color: var(--cream); text-decoration: none; }
+    .nav-back { font-size: 13px; font-weight: 300; color: var(--cream-mid); text-decoration: none; transition: color 0.2s; }
     .nav-back:hover { color: var(--cream); }
-    main {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 80px 24px 120px;
-    }
-    .page-eyebrow {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      color: var(--violet);
-      text-transform: lowercase;
-      margin-bottom: 20px;
-    }
-    h1 {
-      font-family: 'Bodoni Moda', serif;
-      font-style: italic;
-      font-size: 48px;
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      color: var(--cream);
-      margin-bottom: 16px;
-    }
-    .effective-date {
-      font-size: 13px;
-      color: var(--cream-low);
-      margin-bottom: 64px;
-    }
-    h2 {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--cream);
-      margin-top: 48px;
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
-    }
-    p {
-      font-size: 15px;
-      color: var(--cream-mid);
-      margin-bottom: 16px;
-      line-height: 1.8;
-    }
-    ul {
-      margin: 0 0 16px 24px;
-    }
-    ul li {
-      font-size: 15px;
-      color: var(--cream-mid);
-      line-height: 1.8;
-      margin-bottom: 8px;
-    }
-    a {
-      color: var(--violet);
-      text-decoration: none;
-    }
+    main { max-width: 720px; margin: 0 auto; padding: 80px 24px 120px; }
+    .page-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; color: var(--violet); text-transform: lowercase; margin-bottom: 20px; }
+    h1 { font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 48px; font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; color: var(--cream); margin-bottom: 16px; }
+    .effective-date { font-size: 13px; color: var(--cream-low); margin-bottom: 64px; }
+    h2 { font-size: 18px; font-weight: 500; color: var(--cream); margin-top: 48px; margin-bottom: 16px; letter-spacing: -0.01em; }
+    p { font-size: 15px; color: var(--cream-mid); margin-bottom: 16px; line-height: 1.8; }
+    ul { margin: 0 0 16px 24px; }
+    ul li { font-size: 15px; color: var(--cream-mid); line-height: 1.8; margin-bottom: 8px; }
+    a { color: var(--violet); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    footer {
-      border-top: 0.5px solid rgba(237,232,223,0.08);
-      padding: 32px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    .footer-logo {
-      font-family: 'Bodoni Moda', serif;
-      font-style: italic;
-      font-size: 18px;
-      color: var(--cream-mid);
-      text-decoration: none;
-    }
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-    .footer-links a {
-      font-size: 12px;
-      color: var(--cream-low);
-      text-decoration: none;
-    }
+    footer { border-top: 0.5px solid rgba(237,232,223,0.08); padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 18px; color: var(--cream-mid); text-decoration: none; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 12px; color: var(--cream-low); text-decoration: none; }
     .footer-links a:hover { color: var(--cream-mid); }
-    @media (max-width: 600px) {
-      nav { padding: 20px 24px; }
-      h1 { font-size: 36px; }
-      footer { padding: 24px; flex-direction: column; align-items: flex-start; }
-    }
+    @media (max-width: 600px) { nav { padding: 20px 24px; } h1 { font-size: 36px; } footer { padding: 24px; flex-direction: column; align-items: flex-start; } }
   </style>
 </head>
 <body>
-
 <nav>
   <a class="nav-logo" href="/">hodgepodge</a>
   <a class="nav-back" href="/">back to home</a>
 </nav>
-
 <main>
   <p class="page-eyebrow">legal</p>
   <h1>terms of service</h1>
@@ -151,7 +50,7 @@
   <p>welcome to hodgepodge. by creating an account or using our app or website, you agree to these terms of service. please read them carefully.</p>
 
   <h2>about hodgepodge</h2>
-  <p>hodgepodge is a trust-based social dining app that connects people through a friends-of-friends social graph. hosts organize intimate tables (dinners, drinks, brunch, and experiences) and invite guests from their network. guests may only join tables through verified connections.</p>
+  <p>hodgepodge is a trust-based social app that connects people through a friends-of-friends social graph. hosts organize intimate hangs — dinners, drinks, brunch, and experiences — and invite guests from their constellation. guests may only join hangs through verified friends.</p>
 
   <h2>eligibility</h2>
   <p>you must be at least 18 years old to use hodgepodge. by creating an account, you represent that you are 18 or older and that the information you provide is accurate.</p>
@@ -177,10 +76,10 @@
   </ul>
 
   <h2>hosting responsibilities</h2>
-  <p>as a host, you are responsible for the tables you create and the guests you invite. you agree to:</p>
+  <p>as a host, you are responsible for the hangs you create and the guests you invite. you agree to:</p>
   <ul>
-    <li>only invite guests you genuinely know or who are connected through your network</li>
-    <li>ensure the information about your table (venue, time, guest count) is accurate</li>
+    <li>only invite guests you genuinely know or who are connected through your constellation</li>
+    <li>ensure the information about your hang (venue, time, guest count) is accurate</li>
     <li>treat all guests with respect</li>
     <li>not use the host role to collect personal data about guests for purposes outside hodgepodge</li>
   </ul>
@@ -189,7 +88,7 @@
   <p>hodgepodge sends two types of SMS messages:</p>
   <ul>
     <li><strong>verification codes:</strong> one-time codes sent when you sign in. these are transactional messages required for authentication.</li>
-    <li><strong>notifications:</strong> table invitations, RSVP confirmations, reminders, and connection notifications. these are only sent if you explicitly opt in by checking the optional checkbox provided during sign-up or in your account settings. opt-in to notifications is voluntary and not required to use hodgepodge.</li>
+    <li><strong>notifications:</strong> hang invitations, RSVP confirmations, reminders, and friend notifications. these are only sent if you explicitly opt in by checking the optional checkbox provided during sign-up or in your account settings. opt-in to notifications is voluntary and not required to use hodgepodge.</li>
   </ul>
   <p>message and data rates may apply. you may opt out of SMS notifications at any time by replying STOP to any message. reply HELP for assistance. mobile opt-in data is never shared with third parties or affiliates for marketing or promotional purposes.</p>
 
@@ -203,7 +102,7 @@
   <p>we reserve the right to suspend or terminate your account if you violate these terms, engage in harmful behavior toward other members, or if we determine your use poses a risk to the community. you may delete your account at any time from within the app settings.</p>
 
   <h2>disclaimers</h2>
-  <p>hodgepodge is provided "as is" without warranties of any kind. we do not guarantee that the platform will be error-free or uninterrupted. we are not responsible for the conduct of members at tables or outside the platform.</p>
+  <p>hodgepodge is provided "as is" without warranties of any kind. we do not guarantee that the platform will be error-free or uninterrupted. we are not responsible for the conduct of members at hangs or outside the platform.</p>
 
   <h2>limitation of liability</h2>
   <p>to the fullest extent permitted by law, hodgepodge shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform. our total liability to you for any claim arising from these terms shall not exceed the amount you paid us in the 12 months preceding the claim (which, during the beta period, is zero).</p>
@@ -216,9 +115,7 @@
 
   <h2>contact us</h2>
   <p>if you have questions about these terms, contact us at <a href="mailto:hello@hodgepodge.social">hello@hodgepodge.social</a>.</p>
-
 </main>
-
 <footer>
   <a class="footer-logo" href="/">hodgepodge</a>
   <div class="footer-links">
@@ -227,6 +124,5 @@
     <a href="/terms">terms of service</a>
   </div>
 </footer>
-
 </body>
 </html>
