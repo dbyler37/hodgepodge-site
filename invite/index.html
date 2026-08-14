@@ -118,53 +118,16 @@
     async function fetchInvite() {
       if (!token) { showInvalid(); return }
 
-      // 1. get hang_id from token
-      const linkRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/invite_links?token=eq.${token}&select=hang_id`,
+      const res = await fetch(
+        `${SUPABASE_URL}/functions/v1/get-invite-details?token=${encodeURIComponent(token)}`,
         { headers }
       )
-      const linkData = await linkRes.json()
-      if (!linkData?.length) { showInvalid(); return }
-      const hangId = linkData[0].hang_id
 
-      // 2. get hang
-      const hangRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/hangs?id=eq.${hangId}&select=id,name,hang_type,date,venue_name,max_guests,host_id`,
-        { headers }
-      )
-      const hangData = await hangRes.json()
-      if (!hangData?.length) { showInvalid(); return }
-      const hang = hangData[0]
+      if (!res.ok) { showInvalid(); return }
+      const data = await res.json()
+      const { hang, host_name: hostName, attending_count: attendingCount, guest_names: allGuestNames } = data
 
-      // 3. get host name
-      const hostRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/profiles?id=eq.${hang.host_id}&select=name`,
-        { headers }
-      )
-      const hostData = await hostRes.json()
-      const hostName = hostData?.[0]?.name ?? 'your host'
-
-      // 4. get attending guests
-      const guestsRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/guests?hang_id=eq.${hangId}&status=eq.attending&select=name,user_id`,
-        { headers }
-      )
-      const guestsData = await guestsRes.json()
-      const attending = guestsData ?? []
-
-      // 5. get names for app guests
-      const appGuestIds = attending.filter(g => g.user_id).map(g => g.user_id)
-      let appGuestNames = []
-      if (appGuestIds.length) {
-        const profilesRes = await fetch(
-          `${SUPABASE_URL}/rest/v1/profiles?id=in.(${appGuestIds.join(',')})&select=name`,
-          { headers }
-        )
-        const profilesData = await profilesRes.json()
-        appGuestNames = (profilesData ?? []).map(p => p.name)
-      }
-      const webGuestNames = attending.filter(g => !g.user_id && g.name).map(g => g.name)
-      const allGuestNames = [...appGuestNames, ...webGuestNames]
+      if (hang.status !== 'active') { showInvalid(); return }
 
       // render pill
       const pill = $('hang-pill')
@@ -182,7 +145,7 @@
 
       $('meta-venue').textContent = hang.venue_name ?? 'venue tbc'
 
-      const remaining = hang.max_guests - attending.length
+      const remaining = hang.max_guests - attendingCount
       const guestsEl = $('meta-guests')
       guestsEl.textContent = remaining <= 0
         ? 'hang is full'
@@ -193,7 +156,7 @@
       if (remaining <= 0) { showFull(); return }
 
       // guest chips
-      const namedGuests = allGuestNames.filter(Boolean).slice(0, 8)
+      const namedGuests = (allGuestNames ?? []).filter(Boolean).slice(0, 8)
       if (namedGuests.length) {
         const chips = $('guest-chips')
         namedGuests.forEach(n => {
