@@ -96,17 +96,6 @@
       html { scroll-behavior: auto; }
     }
 
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 20px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(to bottom, rgba(17,12,15,0.95) 0%, transparent 100%);
-    }
-
     .accent-teal { color: var(--teal); font-weight: 500; }
     .accent-violet { color: var(--violet); font-weight: 500; }
     .accent-salmon { color: var(--salmon); font-weight: 500; }
@@ -116,191 +105,144 @@
     .dot-row.center { justify-content: center; }
     .dot-row span { width: 7px; height: 7px; border-radius: 50%; display: block; opacity: .9; }
 
-    .nav-logo {
+    /* header */
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      min-height: 76px;
+      padding: 16px var(--gutter);
+    }
+
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
       font-family: 'Bodoni Moda', serif;
       font-style: italic;
-      font-size: 22px;
-      color: var(--cream);
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--heading);
       text-decoration: none;
-      letter-spacing: -0.02em;
     }
 
-    .nav-cta {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--cream);
-      background: var(--fig);
-      border: none;
-      border-radius: 100px;
-      padding: 10px 22px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .nav-cta:hover { opacity: 0.85; }
+    .header-nav { display: flex; align-items: center; gap: 24px; }
 
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-size: 15px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+    /* buttons */
+    .btn {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 120px 24px 80px;
-      overflow: hidden;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(92,45,74,0.35) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .orb-teal {
-      position: absolute;
-      width: 400px; height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(91,158,150,0.12) 0%, transparent 70%);
-      bottom: -100px; right: -80px;
-      pointer-events: none;
-    }
-
-    .orb-violet {
-      position: absolute;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(155,143,200,0.1) 0%, transparent 70%);
-      top: 100px; left: -60px;
-      pointer-events: none;
-    }
-
-    .orb-salmon {
-      position: absolute;
-      width: 260px; height: 260px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(230,128,111,0.1) 0%, transparent 70%);
-      bottom: 60px; left: 10%;
-      pointer-events: none;
-    }
-
-    .orb-pistachio {
-      position: absolute;
-      width: 220px; height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(157,184,122,0.1) 0%, transparent 70%);
-      top: 60px; right: 8%;
-      pointer-events: none;
-    }
-
-    .hero-eyebrow {
-      font-size: 11px;
+      min-height: 56px;
+      padding: 0 30px;
+      border: none;
+      border-radius: 999px;
+      background: var(--pistachio);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
       font-weight: 500;
-      letter-spacing: 0.18em;
-      color: var(--violet);
-      text-transform: lowercase;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.2s;
+      line-height: 1.2;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: 0 8px 18px var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px var(--shadow); }
+    .btn-sm { min-height: 44px; padding: 0 22px; font-size: 15px; }
+
+    /* hero */
+    .hero { display: flex; flex-wrap: wrap; }
+
+    .hero-copy {
+      flex: 1 1 440px;
+      min-width: 0;
+      padding: clamp(48px, 7vw, 96px) var(--gutter);
     }
 
     .hero-headline {
       font-family: 'Bodoni Moda', serif;
       font-style: italic;
-      font-size: clamp(52px, 8vw, 96px);
       font-weight: 700;
-      line-height: 1.0;
-      letter-spacing: -0.03em;
-      color: var(--cream);
-      margin-bottom: 28px;
-      max-width: 900px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.4s;
+      font-size: clamp(60px, 8.4vw, 108px);
+      line-height: 1;
+      color: var(--heading);
     }
+
+    .nowrap { white-space: nowrap; }
 
     .hero-sub {
-      font-size: clamp(15px, 2vw, 18px);
-      font-weight: 300;
-      color: var(--cream-mid);
-      max-width: 600px;
-      line-height: 1.7;
-      margin-bottom: 48px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.6s;
+      margin-top: 32px;
+      max-width: 30rem;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--text);
     }
 
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.8s;
-    }
-
-    .btn-primary {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--cream);
-      background: var(--fig);
-      border: none;
-      border-radius: 100px;
-      padding: 14px 32px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.2s, opacity 0.2s;
-    }
-    .btn-primary:hover { transform: translateY(-1px); opacity: 0.9; }
-
-    .btn-ghost {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 300;
-      color: var(--cream-mid);
-      background: none;
-      border: 0.5px solid rgba(91,158,150,0.35);
-      border-radius: 100px;
-      padding: 14px 32px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .btn-ghost:hover { border-color: rgba(91,158,150,0.6); color: var(--cream); }
+    .hero-actions { margin-top: 36px; }
 
     .hero-caption {
+      margin-top: 20px;
       font-family: 'Bodoni Moda', serif;
       font-style: italic;
-      font-weight: 400;
-      font-size: 14px;
-      color: var(--salmon);
-      margin-top: 22px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 1s;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--text-muted);
     }
 
-    .hero-scroll {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
+    .hero-map {
+      flex: 1 1 480px;
+      min-width: 0;
+      padding: 24px var(--gutter);
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 8px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 1.2s;
+      justify-content: center;
     }
 
-    .scroll-line {
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, var(--cream-low), transparent);
+    /* constellation diagram */
+    .constellation { display: block; width: 100%; max-width: 620px; height: auto; }
+    .constellation .ring { fill: none; stroke: var(--line); }
+    .constellation .ring-inner { stroke-opacity: 0.14; }
+    .constellation .ring-outer { stroke-opacity: 0.1; }
+    .constellation .link { stroke: var(--line); }
+    .constellation .link-friend { stroke-opacity: 0.7; stroke-width: 1.6; }
+    .constellation .link-satellite { stroke-opacity: 0.35; stroke-width: 1; }
+    .constellation .lift { filter: drop-shadow(0 5px 9px var(--shadow)); }
+    .constellation .lift-you { filter: drop-shadow(0 6px 12px var(--shadow)); }
+    .constellation .fill-plum { fill: var(--plum); }
+    .constellation .fill-iris { fill: var(--iris); }
+    .constellation .fill-pistachio { fill: var(--pistachio); }
+    .constellation .fill-persimmon { fill: var(--persimmon); }
+    .constellation .label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 17px;
+      fill: var(--ink);
+    }
+    .constellation .label-pill { font-size: 19px; }
+    .constellation .label-you { fill: var(--accent-on-plum); }
+
+    /* entrance motion, off when the device asks for reduced motion */
+    .fade-up { animation: fadeUp 0.8s ease both; }
+    .fade-up.d1 { animation-delay: 0.15s; }
+    .fade-up.d2 { animation-delay: 0.3s; }
+    .fade-up.d3 { animation-delay: 0.45s; }
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { animation: none; }
     }
 
     .section {
@@ -560,7 +502,6 @@
     }
 
     @media (max-width: 768px) {
-      nav { padding: 20px 24px; }
       .steps { grid-template-columns: 1fr; gap: 2px; }
       .step:first-child { border-radius: 16px 16px 0 0; }
       .step:last-child  { border-radius: 0 0 16px 16px; }
@@ -573,34 +514,49 @@
 <body>
   <div class="page">
 
-  <nav>
-    <div style="display:flex; align-items:center; gap:12px;">
-      <a class="nav-logo" href="/">hodgepodge</a>
-      <div class="dot-row" aria-hidden="true">
-        <span style="background:var(--salmon);"></span>
-        <span style="background:var(--pistachio);"></span>
-        <span style="background:var(--violet);"></span>
-        <span style="background:var(--teal);"></span>
-      </div>
-    </div>
-    <a class="nav-cta" href="#waitlist">join the waitlist</a>
-  </nav>
+  <header class="site-header">
+    <a class="wordmark" href="/">hodgepodge</a>
+    <nav class="header-nav" aria-label="main">
+      <a class="nav-link" href="#how-it-works">how it works</a>
+      <a class="btn btn-sm" href="#waitlist">join the waitlist</a>
+    </nav>
+  </header>
 
   <section class="hero">
-    <div class="orb-teal"></div>
-    <div class="orb-violet"></div>
-    <div class="orb-salmon"></div>
-    <div class="orb-pistachio"></div>
-    <h1 class="hero-headline">turn what you share<br>into real community</h1>
-    <p class="hero-sub">
-      hodgepodge is for people who want to bring others together, and for people looking for somewhere to <span class="accent-violet">genuinely belong</span>.
-    </p>
-    <div class="hero-actions">
-      <a class="btn-primary" href="#waitlist">join the waitlist</a>
+    <div class="hero-copy">
+      <h1 class="hero-headline fade-up">more life <span class="nowrap">in common.</span></h1>
+      <p class="hero-sub fade-up d1">hodgepodge is for people who want to bring others together, and for people looking for somewhere to genuinely belong.</p>
+      <div class="hero-actions fade-up d2">
+        <a class="btn" href="#waitlist">join the waitlist</a>
+      </div>
+      <p class="hero-caption fade-up d3">launching first in nyc and boston</p>
     </div>
-    <p class="hero-caption">launching first in nyc and boston</p>
-    <div class="hero-scroll">
-      <div class="scroll-line"></div>
+    <div class="hero-map fade-up d2">
+      <svg class="constellation" viewBox="0 0 640 640" role="img" aria-label="a map of people connected through friends and shared things">
+        <circle class="ring ring-inner" cx="320" cy="320" r="130" />
+        <circle class="ring ring-outer" cx="320" cy="320" r="242" />
+        <line class="link link-friend" x1="320" y1="320" x2="241.2" y2="219.13" />
+        <line class="link link-friend" x1="320" y1="320" x2="451.07" y2="292.14" />
+        <line class="link link-friend" x1="320" y1="320" x2="260.85" y2="431.25" />
+        <line class="link link-satellite" x1="241.2" y1="219.13" x2="98.23" y2="239.28" />
+        <line class="link link-satellite" x1="241.2" y1="219.13" x2="346.13" y2="71.37" />
+        <line class="link link-satellite" x1="451.07" y1="292.14" x2="517.31" y2="186.91" />
+        <line class="link link-satellite" x1="260.85" y1="431.25" x2="472.68" y2="515.43" />
+        <line class="link link-satellite" x1="260.85" y1="431.25" x2="94.47" y2="402.08" />
+        <g class="lift"><circle class="fill-iris" cx="241.2" cy="219.13" r="32" /><text class="label" x="241.2" y="225.13" text-anchor="middle">m</text></g>
+        <g class="lift"><circle class="fill-iris" cx="451.07" cy="292.14" r="32" /><text class="label" x="451.07" y="298.14" text-anchor="middle">d</text></g>
+        <g class="lift"><circle class="fill-iris" cx="260.85" cy="431.25" r="32" /><text class="label" x="260.85" y="437.25" text-anchor="middle">s</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="98.23" cy="239.28" r="28" /><text class="label" x="98.23" y="245.28" text-anchor="middle">j</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="346.13" cy="71.37" r="28" /><text class="label" x="346.13" y="77.37" text-anchor="middle">p</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="517.31" cy="186.91" r="28" /><text class="label" x="517.31" y="192.91" text-anchor="middle">a</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="472.68" cy="515.43" r="28" /><text class="label" x="472.68" y="521.43" text-anchor="middle">r</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="94.47" cy="402.08" r="28" /><text class="label" x="94.47" y="408.08" text-anchor="middle">l</text></g>
+        <g class="lift-you"><circle class="fill-plum" cx="320" cy="320" r="44" /><text class="label label-you" x="320" y="326" text-anchor="middle">you</text></g>
+        <g class="lift"><rect class="fill-persimmon" x="385.6" y="64" width="176.8" height="40" rx="20" /><text class="label label-pill" x="474" y="90" text-anchor="middle">a neighborhood</text></g>
+        <g class="lift"><rect class="fill-iris" x="14.9" y="300" width="146.2" height="40" rx="20" /><text class="label label-pill" x="88" y="326" text-anchor="middle">an interest</text></g>
+        <g class="lift"><rect class="fill-pistachio" x="421.8" y="400" width="156.4" height="40" rx="20" /><text class="label label-pill" x="500" y="426" text-anchor="middle">a life stage</text></g>
+        <g class="lift"><rect class="fill-persimmon" x="82" y="500" width="136" height="40" rx="20" /><text class="label label-pill" x="150" y="526" text-anchor="middle">a question</text></g>
+      </svg>
     </div>
   </section>
 
@@ -737,17 +693,6 @@
         document.getElementById('input-phone').placeholder = 'something went wrong. try again.';
       }
     }
-
-    window.addEventListener('scroll', function() {
-      var nav = document.querySelector('nav');
-      if (window.scrollY > 60) {
-        nav.style.background = 'rgba(17,12,15,0.97)';
-        nav.style.backdropFilter = 'blur(12px)';
-      } else {
-        nav.style.background = 'linear-gradient(to bottom, rgba(17,12,15,0.95) 0%, transparent 100%)';
-        nav.style.backdropFilter = 'none';
-      }
-    });
 
     var steps = document.querySelectorAll('.step');
     var obs = new IntersectionObserver(function(entries) {
