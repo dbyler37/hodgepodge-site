@@ -245,6 +245,34 @@
       .fade-up { animation: none; }
     }
 
+    /* legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 56px;
+      padding: 8px var(--gutter) 0;
+      list-style: none;
+    }
+    .legend li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 44px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .legend-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      box-shadow: 0 3px 6px var(--shadow);
+    }
+    .dot-pistachio { background: var(--pistachio); }
+    .dot-iris { background: var(--iris); }
+    .dot-persimmon { background: var(--persimmon); }
+
     .section {
       position: relative;
       z-index: 1;
@@ -559,6 +587,12 @@
       </svg>
     </div>
   </section>
+
+  <ul class="legend">
+    <li><span class="legend-dot dot-pistachio" aria-hidden="true"></span>common ground</li>
+    <li><span class="legend-dot dot-iris" aria-hidden="true"></span>a good mix</li>
+    <li><span class="legend-dot dot-persimmon" aria-hidden="true"></span>a real reason to gather</li>
+  </ul>
 
   <section class="section" id="how-it-works">
     <p class="section-eyebrow">how it works</p>
