@@ -3,508 +3,575 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#F3ECDF" />
   <title>hodgepodge · more life in common</title>
   <meta name="description" content="hodgepodge is a social app that brings people together in person through what they already have in common, and helps them keep meeting. the best hangs turn into a place to belong." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,700&family=DM+Sans:wght@300;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /*
+      Palette and light-mode roles. Sections use the role tokens, not the
+      palette tokens, so a dark mode can later redefine the roles only.
+      The site ships light mode only.
+    */
     :root {
-      --bg:       #110C0F;
-      --surface:  #2A1520;
-      --surface2: #351a28;
-      --fig:      #5C2D4A;
-      --teal:     #5B9E96;
-      --violet:   #9B8FC8;
-      --salmon:   #E6806F;
-      --pistachio: #9DB87A;
-      --crimson:  #C45050;
-      --cream:    #EDE8DF;
-      --cream-mid: rgba(237,232,223,0.55);
-      --cream-low: rgba(237,232,223,0.3);
-      --cream-faint: rgba(237,232,223,0.12);
+      color-scheme: light;
+
+      /* palette */
+      --plum:      #2F0E2A;
+      --cream:     #F3ECDF;
+      --pistachio: #B3D39A;
+      --iris:      #9B86F0;
+      --persimmon: #EE6A3C;
+      --ink:       #1A0A12;
+
+      /* light-mode roles */
+      --page:           var(--cream);
+      --heading:        var(--plum);
+      --text:           #2A1320;
+      --text-muted:     #67505C;
+      --card-plum:      var(--plum);
+      --on-plum:        var(--cream);
+      --on-plum-muted:  #E6D9DC;
+      --on-color-card:  var(--plum);
+      --accent-on-plum: var(--pistachio);
+      --progress-track: #5A4254;
+      --control-track:  #E9DFCF;
+      --control-border: var(--text-muted);
+      --error:          #8E1F2A;
+      --line:           var(--plum);
+      --shadow:         rgba(47,14,42,0.22);
+
+      /* layout */
+      --gutter:    clamp(16px, 3.4vw, 44px);
+      --max-width: 1280px;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--cream);
+      background: var(--page);
+      color: var(--text);
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
       line-height: 1.6;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.4;
+    .page {
+      max-width: var(--max-width);
+      margin: 0 auto;
     }
 
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 20px 48px;
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--heading);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+
+    /* header */
+    .site-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(to bottom, rgba(17,12,15,0.95) 0%, transparent 100%);
+      gap: 16px;
+      flex-wrap: wrap;
+      min-height: 76px;
+      padding: 16px var(--gutter);
     }
 
-    .accent-teal { color: var(--teal); font-weight: 500; }
-    .accent-violet { color: var(--violet); font-weight: 500; }
-    .accent-salmon { color: var(--salmon); font-weight: 500; }
-    .accent-pistachio { color: var(--pistachio); font-weight: 500; }
-
-    .dot-row { display: flex; gap: 8px; }
-    .dot-row.center { justify-content: center; }
-    .dot-row span { width: 7px; height: 7px; border-radius: 50%; display: block; opacity: .9; }
-
-    .nav-logo {
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
       font-family: 'Bodoni Moda', serif;
       font-style: italic;
-      font-size: 22px;
-      color: var(--cream);
+      font-weight: 700;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--heading);
       text-decoration: none;
-      letter-spacing: -0.02em;
     }
 
-    .nav-cta {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--cream);
-      background: var(--fig);
-      border: none;
-      border-radius: 100px;
-      padding: 10px 22px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-    .nav-cta:hover { opacity: 0.85; }
+    .header-nav { display: flex; align-items: center; gap: 24px; }
 
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-size: 15px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+    /* buttons */
+    .btn {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 120px 24px 80px;
-      overflow: hidden;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(92,45,74,0.35) 0%, transparent 70%);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .orb-teal {
-      position: absolute;
-      width: 400px; height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(91,158,150,0.12) 0%, transparent 70%);
-      bottom: -100px; right: -80px;
-      pointer-events: none;
-    }
-
-    .orb-violet {
-      position: absolute;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(155,143,200,0.1) 0%, transparent 70%);
-      top: 100px; left: -60px;
-      pointer-events: none;
-    }
-
-    .orb-salmon {
-      position: absolute;
-      width: 260px; height: 260px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(230,128,111,0.1) 0%, transparent 70%);
-      bottom: 60px; left: 10%;
-      pointer-events: none;
-    }
-
-    .orb-pistachio {
-      position: absolute;
-      width: 220px; height: 220px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(157,184,122,0.1) 0%, transparent 70%);
-      top: 60px; right: 8%;
-      pointer-events: none;
-    }
-
-    .hero-eyebrow {
-      font-size: 11px;
+      min-height: 56px;
+      padding: 0 30px;
+      border: none;
+      border-radius: 999px;
+      background: var(--pistachio);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 17px;
       font-weight: 500;
-      letter-spacing: 0.18em;
-      color: var(--violet);
-      text-transform: lowercase;
-      margin-bottom: 24px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.2s;
+      line-height: 1.2;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: 0 8px 18px var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px var(--shadow); }
+    .btn-sm { min-height: 44px; padding: 0 22px; font-size: 15px; }
+
+    /* hero */
+    .hero { display: flex; flex-wrap: wrap; }
+
+    .hero-copy {
+      flex: 1 1 440px;
+      min-width: 0;
+      padding: clamp(48px, 7vw, 96px) var(--gutter);
     }
 
     .hero-headline {
       font-family: 'Bodoni Moda', serif;
       font-style: italic;
-      font-size: clamp(52px, 8vw, 96px);
       font-weight: 700;
-      line-height: 1.0;
-      letter-spacing: -0.03em;
-      color: var(--cream);
-      margin-bottom: 28px;
-      max-width: 900px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.4s;
+      font-size: clamp(60px, 8.4vw, 108px);
+      line-height: 1;
+      color: var(--heading);
     }
+
+    .nowrap { white-space: nowrap; }
 
     .hero-sub {
-      font-size: clamp(15px, 2vw, 18px);
-      font-weight: 300;
-      color: var(--cream-mid);
-      max-width: 600px;
-      line-height: 1.7;
-      margin-bottom: 48px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.6s;
+      margin-top: 32px;
+      max-width: 30rem;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--text);
     }
 
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.8s;
-    }
-
-    .btn-primary {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--cream);
-      background: var(--fig);
-      border: none;
-      border-radius: 100px;
-      padding: 14px 32px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.2s, opacity 0.2s;
-    }
-    .btn-primary:hover { transform: translateY(-1px); opacity: 0.9; }
-
-    .btn-ghost {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 300;
-      color: var(--cream-mid);
-      background: none;
-      border: 0.5px solid rgba(91,158,150,0.35);
-      border-radius: 100px;
-      padding: 14px 32px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .btn-ghost:hover { border-color: rgba(91,158,150,0.6); color: var(--cream); }
+    .hero-actions { margin-top: 36px; }
 
     .hero-caption {
+      margin-top: 20px;
       font-family: 'Bodoni Moda', serif;
       font-style: italic;
-      font-weight: 400;
-      font-size: 14px;
-      color: var(--salmon);
-      margin-top: 22px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 1s;
-    }
-
-    .hero-scroll {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 1.2s;
-    }
-
-    .scroll-line {
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, var(--cream-low), transparent);
-    }
-
-    .section {
-      position: relative;
-      z-index: 1;
-      padding: 120px 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-eyebrow {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      color: var(--violet);
-      text-transform: lowercase;
-      margin-bottom: 20px;
-    }
-
-    .section-headline {
-      font-family: 'Bodoni Moda', serif;
-      font-style: italic;
-      font-size: clamp(36px, 5vw, 56px);
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: var(--cream);
-      margin-bottom: 64px;
-      max-width: 600px;
-    }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-    }
-
-    .step {
-      background: var(--surface);
-      padding: 40px 36px;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.3s;
-    }
-    .step:hover { background: var(--surface2); }
-    .step:first-child { border-radius: 16px 0 0 16px; }
-    .step:last-child  { border-radius: 0 16px 16px 0; }
-
-    .step-num {
-      font-family: 'Bodoni Moda', serif;
-      font-style: italic;
-      font-size: 26px;
       font-weight: 700;
-      letter-spacing: -0.02em;
-      width: 60px;
-      height: 60px;
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    .hero-map {
+      flex: 1 1 480px;
+      min-width: 0;
+      padding: 24px var(--gutter);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 18px;
-      color: var(--bg);
-      margin-bottom: 28px;
     }
-    .step:nth-child(1) .step-num { background: var(--teal); }
-    .step:nth-child(2) .step-num { background: var(--violet); }
-    .step:nth-child(3) .step-num { background: var(--pistachio); }
 
-    .step-title {
+    /* constellation diagram */
+    .constellation { display: block; width: 100%; max-width: 620px; height: auto; }
+    .constellation .ring { fill: none; stroke: var(--line); }
+    .constellation .ring-inner { stroke-opacity: 0.14; }
+    .constellation .ring-outer { stroke-opacity: 0.1; }
+    .constellation .link { stroke: var(--line); }
+    .constellation .link-friend { stroke-opacity: 0.7; stroke-width: 1.6; }
+    .constellation .link-satellite { stroke-opacity: 0.35; stroke-width: 1; }
+    .constellation .lift { filter: drop-shadow(0 5px 9px var(--shadow)); }
+    .constellation .lift-you { filter: drop-shadow(0 6px 12px var(--shadow)); }
+    .constellation .fill-plum { fill: var(--plum); }
+    .constellation .fill-iris { fill: var(--iris); }
+    .constellation .fill-pistachio { fill: var(--pistachio); }
+    .constellation .fill-persimmon { fill: var(--persimmon); }
+    .constellation .label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 17px;
+      fill: var(--ink);
+    }
+    .constellation .label-pill { font-size: 19px; }
+    .constellation .label-you { fill: var(--accent-on-plum); }
+
+    /* entrance motion, off when the device asks for reduced motion */
+    .fade-up { animation: fadeUp 0.8s ease both; }
+    .fade-up.d1 { animation-delay: 0.15s; }
+    .fade-up.d2 { animation-delay: 0.3s; }
+    .fade-up.d3 { animation-delay: 0.45s; }
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { animation: none; }
+    }
+
+    /* legend */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 56px;
+      padding: 8px var(--gutter) 0;
+      list-style: none;
+    }
+    .legend li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 44px;
       font-size: 18px;
       font-weight: 500;
-      color: var(--cream);
-      margin-bottom: 12px;
-      letter-spacing: -0.01em;
+      color: var(--text);
     }
-    .step:nth-child(1) .step-title { color: var(--teal); }
-    .step:nth-child(2) .step-title { color: var(--violet); }
-    .step:nth-child(3) .step-title { color: var(--pistachio); }
-
-    .step-body {
-      font-size: 14px;
-      font-weight: 300;
-      color: var(--cream-mid);
-      line-height: 1.7;
+    .legend-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      box-shadow: 0 3px 6px var(--shadow);
     }
+    .dot-pistachio { background: var(--pistachio); }
+    .dot-iris { background: var(--iris); }
+    .dot-persimmon { background: var(--persimmon); }
 
-    .step-accent {
-      position: absolute;
-      bottom: 0; left: 0;
-      height: 2px;
-      width: 100%;
-      opacity: .35;
-      transition: opacity 0.3s;
-    }
-    .step:hover .step-accent { opacity: 1; }
-    .step:nth-child(1) .step-accent { background: var(--teal); }
-    .step:nth-child(2) .step-accent { background: var(--violet); }
-    .step:nth-child(3) .step-accent { background: var(--pistachio); }
-
-    .openness-section .section-headline { max-width: 680px; }
-    .openness-body { font-size: 17px; font-weight: 300; color: var(--cream-mid); line-height: 1.75; max-width: 600px; margin-bottom: 20px; }
-    .openness-body:last-child { margin-bottom: 0; }
-
-    .divider {
-      height: 0.5px;
-      background: rgba(237,232,223,0.08);
-      margin: 0 24px;
-    }
-
-    .waitlist-section {
-      position: relative;
-      z-index: 1;
-      padding: 120px 24px;
-      text-align: center;
-    }
-
-    .waitlist-inner { max-width: 560px; margin: 0 auto; }
-
-    .waitlist-headline {
+    /* section headlines shared by the gathering and closing sections */
+    .section-title {
+      min-width: 0;
       font-family: 'Bodoni Moda', serif;
       font-style: italic;
-      font-size: clamp(36px, 5vw, 52px);
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: var(--cream);
-      margin-bottom: 16px;
+      font-weight: 700;
+      font-size: clamp(46px, 6vw, 76px);
+      line-height: 1.04;
+      color: var(--heading);
     }
+
+    /* gathering cards */
+    .gathering {
+      padding: clamp(64px, 8vw, 112px) var(--gutter);
+      container-type: inline-size;
+    }
+
+    .gathering-intro {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px 64px;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .gathering-intro .section-title { flex: 1 1 460px; }
+
+    .gathering-body {
+      flex: 0 1 400px;
+      min-width: 0;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    .cards {
+      list-style: none;
+      margin-top: 56px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .card {
+      flex: 1 1 280px;
+      max-width: 380px;
+      min-width: 0;
+      min-height: 190px;
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 14px 30px var(--shadow);
+      color: var(--on-color-card);
+    }
+    .card:nth-child(1) { transform: rotate(-1.6deg); }
+    .card:nth-child(2) { transform: rotate(1.3deg); }
+    .card:nth-child(3) { transform: rotate(-1deg); }
+
+    /* stagger only while cards sit side by side */
+    @container (min-width: 580px) {
+      .card:nth-child(2) { margin-top: 44px; }
+    }
+    @container (min-width: 880px) {
+      .card:nth-child(3) { margin-top: 88px; }
+    }
+
+    .card-iris { background: var(--iris); }
+    .card-persimmon { background: var(--persimmon); }
+    .card-plum { background: var(--card-plum); }
+
+    .card-pill {
+      align-self: flex-start;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: var(--cream);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .card-title {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 27px;
+      line-height: 1.12;
+    }
+    .card-plum .card-title { color: var(--accent-on-plum); }
+
+    .card-meta { font-size: 14px; line-height: 1.5; }
+    .card-plum .card-meta { color: var(--on-plum-muted); }
+    .card-host { color: var(--on-plum); font-weight: 500; }
+
+    .card-going { font-size: 14px; font-weight: 500; color: var(--accent-on-plum); }
+    .progress {
+      height: 5px;
+      margin-top: 6px;
+      border-radius: 3px;
+      background: var(--progress-track);
+      overflow: hidden;
+    }
+    .progress-fill { height: 100%; width: calc(4 / 6 * 100%); background: var(--pistachio); }
+
+    /* how it works */
+    .how {
+      padding-top: clamp(56px, 7vw, 96px);
+      container-type: inline-size;
+    }
+
+    .steps {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .step { padding: 0 var(--gutter) 24px; }
+
+    /* stagger only while steps sit side by side */
+    @container (min-width: 560px) {
+      .steps { grid-template-columns: repeat(2, 1fr); }
+      .step:nth-child(2) { padding-top: 36px; }
+    }
+    @container (min-width: 840px) {
+      .steps { grid-template-columns: repeat(3, 1fr); }
+      .step:nth-child(3) { padding-top: 72px; }
+    }
+
+    .step-num {
+      display: block;
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 84px;
+      line-height: 1;
+    }
+    .step:nth-child(1) .step-num { color: var(--pistachio); }
+    .step:nth-child(2) .step-num { color: var(--iris); }
+    .step:nth-child(3) .step-num { color: var(--persimmon); }
+
+    .step-title {
+      margin-top: 24px;
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(30px, 3vw, 38px);
+      line-height: 1.1;
+      color: var(--heading);
+    }
+
+    .step-body {
+      margin-top: 14px;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    /* scroll reveal: only hides content once the script is known to run */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .js .reveal.is-visible { opacity: 1; transform: none; }
+    .js .step:nth-child(2).reveal { transition-delay: 0.1s; }
+    .js .step:nth-child(3).reveal { transition-delay: 0.2s; }
+    @media (prefers-reduced-motion: reduce) {
+      .js .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* closing and waitlist */
+    .closing { padding: clamp(64px, 8vw, 112px) var(--gutter); }
+
+    .closing-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+    .closing-row .section-title { flex: 1 1 520px; }
 
     .waitlist-sub {
-      font-size: 15px;
-      font-weight: 300;
-      color: var(--cream-mid);
-      margin-bottom: 48px;
-      line-height: 1.7;
+      margin-top: 40px;
+      max-width: 36rem;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text-muted);
     }
 
-    .waitlist-form { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+    .waitlist { margin-top: 32px; max-width: 560px; }
+    .waitlist-form { display: flex; flex-direction: column; gap: 12px; }
     .form-row { display: flex; gap: 8px; }
 
     .form-input {
       flex: 1;
-      background: var(--surface);
-      border: 0.5px solid rgba(237,232,223,0.15);
-      border-radius: 100px;
-      padding: 14px 22px;
+      min-width: 0;
+      min-height: 56px;
+      padding: 0 22px;
+      border: 1.5px solid var(--control-border);
+      border-radius: 999px;
+      background: var(--control-track);
       font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 300;
-      color: var(--cream);
-      outline: none;
-      transition: border-color 0.2s;
+      color: var(--text);
     }
-    .form-input::placeholder { color: var(--cream-low); }
-    .form-input:focus { border-color: rgba(155,143,200,0.5); }
-
-    .form-submit {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--cream);
-      background: var(--fig);
-      border: none;
-      border-radius: 100px;
-      padding: 14px 28px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-    .form-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+    .form-input::placeholder { color: var(--text-muted); opacity: 1; }
+    .form-input.is-invalid { border-color: var(--error); border-width: 2px; }
 
     .sms-opt-in {
       display: flex;
       align-items: flex-start;
-      gap: 10px;
-      text-align: left;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-top: 8px;
       padding: 0 4px;
     }
 
     .sms-checkbox {
       appearance: none;
       -webkit-appearance: none;
-      width: 16px; height: 16px; min-width: 16px;
-      border: 0.5px solid rgba(237,232,223,0.3);
-      border-radius: 4px;
-      background: var(--surface);
-      cursor: pointer;
-      margin-top: 2px;
-      transition: border-color 0.2s, background 0.2s;
       position: relative;
+      width: 22px;
+      height: 22px;
+      min-width: 22px;
+      margin-top: 1px;
+      border: 1.5px solid var(--control-border);
+      border-radius: 6px;
+      background: var(--control-track);
+      cursor: pointer;
     }
-    .sms-checkbox:checked { background: var(--teal); border-color: var(--teal); }
+    .sms-checkbox:checked { background: var(--plum); border-color: var(--plum); }
     .sms-checkbox:checked::after {
       content: '';
       position: absolute;
-      left: 4px; top: 1px;
-      width: 5px; height: 9px;
-      border: 1.5px solid var(--cream);
-      border-top: none; border-left: none;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 11px;
+      border: 2px solid var(--on-plum);
+      border-top: none;
+      border-left: none;
       transform: rotate(45deg);
     }
-    .sms-checkbox:focus { outline: none; border-color: var(--violet); }
 
     .sms-opt-in-label {
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--cream-low);
+      font-size: 13px;
       line-height: 1.6;
+      color: var(--text-muted);
       cursor: pointer;
     }
-    .sms-opt-in-label a { color: var(--cream-low); text-decoration: underline; text-underline-offset: 3px; }
-    .sms-opt-in-label a:hover { color: var(--cream-mid); }
 
     .consent-text {
-      font-size: 11px;
-      font-weight: 300;
-      color: rgba(237,232,223,0.2);
+      margin-top: 20px;
+      font-size: 12px;
       line-height: 1.6;
-      max-width: 480px;
-      margin: 0 auto;
+      color: var(--text-muted);
     }
-    .consent-text a { color: rgba(237,232,223,0.2); text-decoration: underline; text-underline-offset: 3px; }
-    .consent-text a:hover { color: var(--cream-low); }
+
+    .sms-opt-in-label a,
+    .consent-text a {
+      color: var(--text);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
 
     .form-success {
       display: none;
-      background: var(--surface);
-      border: 0.5px solid rgba(157,184,122,0.35);
-      border-radius: 16px;
-      padding: 32px;
-      margin-bottom: 24px;
+      border-radius: 18px;
+      padding: 28px;
+      background: var(--card-plum);
+      box-shadow: 0 14px 30px var(--shadow);
     }
-    .form-success p { font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 22px; color: var(--cream); margin-bottom: 8px; }
-    .form-success span { font-size: 13px; color: var(--cream-mid); }
+    .form-success p {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--accent-on-plum);
+    }
+    .form-success span {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--on-plum-muted);
+    }
 
-    footer {
-      position: relative;
-      z-index: 1;
-      border-top: 0.5px solid rgba(237,232,223,0.08);
-      padding: 40px 48px;
+    /* footer */
+    .site-footer {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+      gap: 12px 24px;
+      padding: 24px var(--gutter);
+      font-size: 14px;
+      color: var(--text-muted);
     }
 
-    .footer-logo { font-family: 'Bodoni Moda', serif; font-style: italic; font-size: 18px; color: var(--cream-mid); text-decoration: none; }
-    .footer-links { display: flex; align-items: center; gap: 32px; }
-    .footer-links a { font-size: 12px; font-weight: 300; color: var(--cream-low); text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--cream-mid); }
-    .footer-copy { font-size: 12px; font-weight: 300; color: var(--cream-low); }
+    .footer-tagline {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--heading);
+    }
+
+    .footer-links { display: flex; align-items: center; gap: 20px; }
+    .footer-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .footer-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
@@ -512,137 +579,157 @@
     }
 
     @media (max-width: 768px) {
-      nav { padding: 20px 24px; }
-      .steps { grid-template-columns: 1fr; gap: 2px; }
-      .step:first-child { border-radius: 16px 16px 0 0; }
-      .step:last-child  { border-radius: 0 0 16px 16px; }
       .form-row { flex-direction: column; }
-      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; gap: 24px; }
-      .footer-links { flex-wrap: wrap; gap: 20px; }
     }
   </style>
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+  <div class="page">
 
-  <nav>
-    <div style="display:flex; align-items:center; gap:12px;">
-      <a class="nav-logo" href="/">hodgepodge</a>
-      <div class="dot-row" aria-hidden="true">
-        <span style="background:var(--salmon);"></span>
-        <span style="background:var(--pistachio);"></span>
-        <span style="background:var(--violet);"></span>
-        <span style="background:var(--teal);"></span>
-      </div>
-    </div>
-    <a class="nav-cta" href="#waitlist">join the waitlist</a>
-  </nav>
+  <header class="site-header">
+    <a class="wordmark" href="/">hodgepodge</a>
+    <nav class="header-nav" aria-label="main">
+      <a class="nav-link" href="#how-it-works">how it works</a>
+      <a class="btn btn-sm" href="#waitlist">join the waitlist</a>
+    </nav>
+  </header>
 
   <section class="hero">
-    <div class="orb-teal"></div>
-    <div class="orb-violet"></div>
-    <div class="orb-salmon"></div>
-    <div class="orb-pistachio"></div>
-    <h1 class="hero-headline">turn what you share<br>into real community</h1>
-    <p class="hero-sub">
-      hodgepodge is for people who want to bring others together, and for people looking for somewhere to <span class="accent-violet">genuinely belong</span>.
-    </p>
-    <div class="hero-actions">
-      <a class="btn-primary" href="#waitlist">join the waitlist</a>
+    <div class="hero-copy">
+      <h1 class="hero-headline fade-up">more life <span class="nowrap">in common</span></h1>
+      <p class="hero-sub fade-up d1">hodgepodge is for people who want to bring others together, and for people looking for somewhere to genuinely belong.</p>
+      <div class="hero-actions fade-up d2">
+        <a class="btn" href="#waitlist">join the waitlist</a>
+      </div>
+      <p class="hero-caption fade-up d3">launching first in nyc and boston</p>
     </div>
-    <p class="hero-caption">launching first in nyc and boston</p>
-    <div class="hero-scroll">
-      <div class="scroll-line"></div>
+    <div class="hero-map fade-up d2">
+      <svg class="constellation" viewBox="0 0 640 640" role="img" aria-label="a map of people connected through friends and shared things">
+        <circle class="ring ring-inner" cx="320" cy="320" r="130" />
+        <circle class="ring ring-outer" cx="320" cy="320" r="242" />
+        <line class="link link-friend" x1="320" y1="320" x2="241.2" y2="219.13" />
+        <line class="link link-friend" x1="320" y1="320" x2="451.07" y2="292.14" />
+        <line class="link link-friend" x1="320" y1="320" x2="260.85" y2="431.25" />
+        <line class="link link-satellite" x1="241.2" y1="219.13" x2="98.23" y2="239.28" />
+        <line class="link link-satellite" x1="241.2" y1="219.13" x2="346.13" y2="71.37" />
+        <line class="link link-satellite" x1="451.07" y1="292.14" x2="517.31" y2="186.91" />
+        <line class="link link-satellite" x1="260.85" y1="431.25" x2="472.68" y2="515.43" />
+        <line class="link link-satellite" x1="260.85" y1="431.25" x2="94.47" y2="402.08" />
+        <g class="lift"><circle class="fill-iris" cx="241.2" cy="219.13" r="32" /><text class="label" x="241.2" y="225.13" text-anchor="middle">ml</text></g>
+        <g class="lift"><circle class="fill-iris" cx="451.07" cy="292.14" r="32" /><text class="label" x="451.07" y="298.14" text-anchor="middle">dr</text></g>
+        <g class="lift"><circle class="fill-iris" cx="260.85" cy="431.25" r="32" /><text class="label" x="260.85" y="437.25" text-anchor="middle">sa</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="98.23" cy="239.28" r="28" /><text class="label" x="98.23" y="245.28" text-anchor="middle">jk</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="346.13" cy="71.37" r="28" /><text class="label" x="346.13" y="77.37" text-anchor="middle">pt</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="517.31" cy="186.91" r="28" /><text class="label" x="517.31" y="192.91" text-anchor="middle">ah</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="472.68" cy="515.43" r="28" /><text class="label" x="472.68" y="521.43" text-anchor="middle">rb</text></g>
+        <g class="lift"><circle class="fill-pistachio" cx="94.47" cy="402.08" r="28" /><text class="label" x="94.47" y="408.08" text-anchor="middle">lw</text></g>
+        <g class="lift-you"><circle class="fill-plum" cx="320" cy="320" r="44" /><text class="label label-you" x="320" y="326" text-anchor="middle">you</text></g>
+        <g class="lift"><rect class="fill-persimmon" x="385.6" y="64" width="176.8" height="40" rx="20" /><text class="label label-pill" x="474" y="90" text-anchor="middle">a neighborhood</text></g>
+        <g class="lift"><rect class="fill-iris" x="14.9" y="300" width="146.2" height="40" rx="20" /><text class="label label-pill" x="88" y="326" text-anchor="middle">an interest</text></g>
+        <g class="lift"><rect class="fill-pistachio" x="421.8" y="400" width="156.4" height="40" rx="20" /><text class="label label-pill" x="500" y="426" text-anchor="middle">a life stage</text></g>
+        <g class="lift"><rect class="fill-persimmon" x="82" y="500" width="136" height="40" rx="20" /><text class="label label-pill" x="150" y="526" text-anchor="middle">a question</text></g>
+      </svg>
     </div>
   </section>
 
-  <section class="section" id="how-it-works">
-    <p class="section-eyebrow">how it works</p>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-title">start with what you share</div>
+  <ul class="legend">
+    <li><span class="legend-dot dot-pistachio" aria-hidden="true"></span>common ground</li>
+    <li><span class="legend-dot dot-iris" aria-hidden="true"></span>a good mix</li>
+    <li><span class="legend-dot dot-persimmon" aria-hidden="true"></span>a real reason to gather</li>
+  </ul>
+
+  <section class="how" id="how-it-works" aria-labelledby="how-title">
+    <h2 class="visually-hidden" id="how-title">how it works</h2>
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step-num" aria-hidden="true">1</span>
+        <h3 class="step-title">start with what you share</h3>
         <p class="step-body">A neighborhood. An interest. A life stage. A question. A favorite way to spend an evening. hodgepodge begins with the things that already connect people.</p>
-        <div class="step-accent"></div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-title">bring people together</div>
+      </li>
+      <li class="step reveal">
+        <span class="step-num" aria-hidden="true">2</span>
+        <h3 class="step-title">bring people together</h3>
         <p class="step-body">Create a gathering around what matters to you. Build the guest list yourself, invite the people you know, or open the invitation to others with something in common.</p>
-        <div class="step-accent"></div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-title">let connection take shape</div>
+      </li>
+      <li class="step reveal">
+        <span class="step-num" aria-hidden="true">3</span>
+        <h3 class="step-title">let connection take shape</h3>
         <p class="step-body">The gathering is only the beginning. hodgepodge creates more opportunities for people to meet, return, contribute, and become part of each other's lives, however that connection grows.</p>
-        <div class="step-accent"></div>
-      </div>
-    </div>
+      </li>
+    </ol>
   </section>
 
-  <div class="divider"></div>
-
-  <section class="section openness-section">
-    <div class="dot-row" aria-hidden="true" style="margin-bottom:24px;">
-      <span style="background:var(--violet);"></span>
-      <span style="background:var(--teal);"></span>
-      <span style="background:var(--pistachio);"></span>
-      <span style="background:var(--salmon);"></span>
+  <section class="gathering" aria-labelledby="gathering-title">
+    <div class="gathering-intro">
+      <h2 class="section-title" id="gathering-title">more familiar faces, more shared stories</h2>
+      <p class="gathering-body">hodgepodge helps turn the things people share into reasons to find one another, make time, and become part of each other's lives. Not just new followers. More familiar faces, more shared stories, and more of a life that happens together.</p>
     </div>
-    <h2 class="section-headline">more life in common</h2>
-    <p class="openness-body">hodgepodge helps turn the things people share into <span class="accent-teal">reasons to find one another</span>, make time, and become part of each other's lives.</p>
-    <p class="openness-body">Not just new followers. More <span class="accent-violet">familiar faces</span>, more <span class="accent-salmon">shared stories</span>, and more of a <span class="accent-pistachio">life that happens together</span>.</p>
+    <p class="visually-hidden">example hangs</p>
+    <ul class="cards">
+      <li class="card card-iris">
+        <span class="card-pill">saved for you</span>
+        <h3 class="card-title">an evening in the west village</h3>
+        <p class="card-meta">hosted by maya · fri 7:30pm</p>
+      </li>
+      <li class="card card-persimmon">
+        <span class="card-pill">personally invited</span>
+        <h3 class="card-title">sunday brunch, park slope</h3>
+        <p class="card-meta">hosted by dev · sun 11am</p>
+      </li>
+      <li class="card card-plum">
+        <h3 class="card-title">pottery and pizza</h3>
+        <p class="card-meta">the clay room<br />hosted by <span class="card-host">sofia</span></p>
+        <div>
+          <p class="card-going">4 / 6 going</p>
+          <div class="progress" aria-hidden="true"><div class="progress-fill"></div></div>
+        </div>
+      </li>
+    </ul>
   </section>
 
-  <div class="divider"></div>
-
-  <section class="waitlist-section" id="waitlist">
-    <div class="waitlist-inner">
-      <div class="dot-row center" aria-hidden="true" style="margin-bottom:22px;">
-        <span style="background:var(--salmon);"></span>
-        <span style="background:var(--pistachio);"></span>
-        <span style="background:var(--violet);"></span>
-        <span style="background:var(--teal);"></span>
-      </div>
-      <h2 class="waitlist-headline">help shape hodgepodge from the beginning</h2>
-      <p class="waitlist-sub">
-        We're launching with a hand-picked group of hosts in NYC and Boston. Join the waitlist to be <span class="accent-salmon">among the first</span> to bring people together with hodgepodge.
-      </p>
+  <section class="closing" id="waitlist" aria-labelledby="waitlist-title">
+    <div class="closing-row">
+      <h2 class="section-title" id="waitlist-title">help shape hodgepodge from the beginning</h2>
+      <a class="btn" href="#input-name">join the waitlist</a>
+    </div>
+    <p class="waitlist-sub">We're launching with a hand-picked group of hosts in NYC and Boston. Join the waitlist to be among the first to bring people together with hodgepodge.</p>
+    <div class="waitlist">
       <div class="waitlist-form" id="waitlist-form">
         <div class="form-row">
+          <label class="visually-hidden" for="input-name">name</label>
           <input class="form-input" type="text" placeholder="name" id="input-name" autocomplete="name" />
         </div>
         <div class="form-row">
+          <label class="visually-hidden" for="input-phone">phone number</label>
           <input class="form-input" type="tel" placeholder="phone number" id="input-phone" autocomplete="tel" />
-          <button class="form-submit" onclick="handleSubmit()">join</button>
+          <button class="btn form-submit" type="button" onclick="handleSubmit()">join</button>
         </div>
         <div class="sms-opt-in">
           <input type="checkbox" class="sms-checkbox" id="sms-consent" />
           <label class="sms-opt-in-label" for="sms-consent">
-            yes, text me when hodgepodge opens. by checking this box, i agree to receive SMS messages from hodgepodge, including waitlist updates and hang notifications. message &amp; data rates may apply. reply STOP to opt out at any time. view our <a href="/privacy" target="_blank">privacy policy</a> and <a href="/terms" target="_blank">terms of service</a>.
+            Yes, text me when hodgepodge opens. By checking this box, I agree to receive SMS messages from hodgepodge, including waitlist updates and hang notifications. Message &amp; data rates may apply. Reply STOP to opt out at any time. View our <a href="/privacy" target="_blank">privacy policy</a> and <a href="/terms" target="_blank">terms of service</a>.
           </label>
         </div>
       </div>
       <div class="form-success" id="form-success">
         <p>you're on the list</p>
-        <span>we'll reach out when hodgepodge opens in your city.</span>
+        <span>We'll reach out when hodgepodge opens in your city.</span>
       </div>
       <p class="consent-text">
-        SMS is optional. your number is used to notify you when hodgepodge opens in your city, only if you opt in above. mobile opt-in data is never shared with third parties.
+        SMS is optional. Your number is used to notify you when hodgepodge opens in your city, only if you opt in above. Mobile opt-in data is never shared with third parties.
       </p>
     </div>
   </section>
 
-  <footer>
-    <a class="footer-logo" href="/">hodgepodge</a>
-    <div class="footer-links">
-      <a href="#how-it-works">how it works</a>
-      <a href="#waitlist">join waitlist</a>
-      <a href="mailto:hello@hodgepodge.social">hello@hodgepodge.social</a>
-      <a href="/privacy" target="_blank">privacy policy</a>
+  <footer class="site-footer">
+    <p class="footer-tagline">more life in common</p>
+    <nav class="footer-links" aria-label="legal">
+      <a href="/privacy" target="_blank">privacy</a>
       <a href="/terms" target="_blank">terms</a>
-    </div>
-    <p class="footer-copy">© 2026 hodgepodge</p>
+    </nav>
   </footer>
+  </div>
 
   <script>
     window.handleSubmit = async function() {
@@ -652,8 +739,8 @@
       const btn = document.querySelector('.form-submit');
 
       if (!name || !phone) {
-        document.getElementById('input-name').style.borderColor = !name ? 'rgba(196,80,80,0.5)' : '';
-        document.getElementById('input-phone').style.borderColor = !phone ? 'rgba(196,80,80,0.5)' : '';
+        document.getElementById('input-name').classList.toggle('is-invalid', !name);
+        document.getElementById('input-phone').classList.toggle('is-invalid', !phone);
         return;
       }
 
@@ -683,33 +770,36 @@
       } catch (e) {
         btn.textContent = 'join';
         btn.disabled = false;
-        document.getElementById('input-phone').style.borderColor = 'rgba(196,80,80,0.5)';
+        document.getElementById('input-phone').classList.add('is-invalid');
         document.getElementById('input-phone').placeholder = 'something went wrong. try again.';
       }
     }
 
-    window.addEventListener('scroll', function() {
-      var nav = document.querySelector('nav');
-      if (window.scrollY > 60) {
-        nav.style.background = 'rgba(17,12,15,0.97)';
-        nav.style.backdropFilter = 'blur(12px)';
-      } else {
-        nav.style.background = 'linear-gradient(to bottom, rgba(17,12,15,0.95) 0%, transparent 100%)';
-        nav.style.backdropFilter = 'none';
-      }
+    document.querySelectorAll('a[href="#input-name"]').forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        var field = document.getElementById('input-name');
+        if (!field || field.offsetParent === null) return;
+        event.preventDefault();
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        field.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+        field.focus({ preventScroll: true });
+      });
     });
 
-    var steps = document.querySelectorAll('.step');
-    var obs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e, i) {
-        if (e.isIntersecting) {
-          e.target.style.animation = 'fadeUp 0.6s ease forwards ' + (i * 0.1) + 's';
-          e.target.style.opacity = '0';
-          obs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    steps.forEach(function(s) { obs.observe(s); });
+    var reveals = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      var revealObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      reveals.forEach(function (el) { revealObserver.observe(el); });
+    } else {
+      reveals.forEach(function (el) { el.classList.add('is-visible'); });
+    }
   </script>
 </body>
 </html>
