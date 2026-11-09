@@ -37,6 +37,7 @@
       --card-plum:      var(--plum);
       --on-plum:        var(--cream);
       --on-plum-muted:  #E6D9DC;
+      --on-color-card:  var(--plum);
       --accent-on-plum: var(--pistachio);
       --progress-track: #5A4254;
       --control-track:  #E9DFCF;
@@ -273,25 +274,112 @@
     .dot-iris { background: var(--iris); }
     .dot-persimmon { background: var(--persimmon); }
 
-    .section {
-      position: relative;
-      z-index: 1;
-      padding: 120px 24px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-headline {
+    /* section headlines shared by the gathering and closing sections */
+    .section-title {
+      min-width: 0;
       font-family: 'Bodoni Moda', serif;
       font-style: italic;
-      font-size: clamp(36px, 5vw, 56px);
-      font-weight: 400;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: var(--cream);
-      margin-bottom: 64px;
-      max-width: 600px;
+      font-weight: 700;
+      font-size: clamp(46px, 6vw, 76px);
+      line-height: 1.04;
+      color: var(--heading);
     }
+
+    /* gathering cards */
+    .gathering {
+      padding: clamp(64px, 8vw, 112px) var(--gutter);
+      container-type: inline-size;
+    }
+
+    .gathering-intro {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px 64px;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+    .gathering-intro .section-title { flex: 1 1 460px; }
+
+    .gathering-body {
+      flex: 0 1 400px;
+      min-width: 0;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    .cards {
+      list-style: none;
+      margin-top: 56px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .card {
+      flex: 1 1 280px;
+      max-width: 380px;
+      min-width: 0;
+      min-height: 190px;
+      border-radius: 18px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 14px 30px var(--shadow);
+      color: var(--on-color-card);
+    }
+    .card:nth-child(1) { transform: rotate(-1.6deg); }
+    .card:nth-child(2) { transform: rotate(1.3deg); }
+    .card:nth-child(3) { transform: rotate(-1deg); }
+
+    /* stagger only while cards sit side by side */
+    @container (min-width: 580px) {
+      .card:nth-child(2) { margin-top: 44px; }
+    }
+    @container (min-width: 880px) {
+      .card:nth-child(3) { margin-top: 88px; }
+    }
+
+    .card-iris { background: var(--iris); }
+    .card-persimmon { background: var(--persimmon); }
+    .card-plum { background: var(--card-plum); }
+
+    .card-pill {
+      align-self: flex-start;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: var(--cream);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .card-title {
+      font-family: 'Bodoni Moda', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 27px;
+      line-height: 1.12;
+    }
+    .card-plum .card-title { color: var(--accent-on-plum); }
+
+    .card-meta { font-size: 14px; line-height: 1.5; }
+    .card-plum .card-meta { color: var(--on-plum-muted); }
+    .card-host { color: var(--on-plum); font-weight: 500; }
+
+    .card-going { font-size: 14px; font-weight: 500; color: var(--accent-on-plum); }
+    .progress {
+      height: 5px;
+      margin-top: 6px;
+      border-radius: 3px;
+      background: var(--progress-track);
+      overflow: hidden;
+    }
+    .progress-fill { height: 100%; width: calc(4 / 6 * 100%); background: var(--pistachio); }
 
     /* how it works */
     .how {
@@ -357,16 +445,6 @@
     .js .step:nth-child(3).reveal { transition-delay: 0.2s; }
     @media (prefers-reduced-motion: reduce) {
       .js .reveal { opacity: 1; transform: none; transition: none; }
-    }
-
-    .openness-section .section-headline { max-width: 680px; }
-    .openness-body { font-size: 17px; font-weight: 300; color: var(--cream-mid); line-height: 1.75; max-width: 600px; margin-bottom: 20px; }
-    .openness-body:last-child { margin-bottom: 0; }
-
-    .divider {
-      height: 0.5px;
-      background: rgba(237,232,223,0.08);
-      margin: 0 24px;
     }
 
     .waitlist-section {
@@ -603,19 +681,33 @@
     </ol>
   </section>
 
-  <section class="section openness-section">
-    <div class="dot-row" aria-hidden="true" style="margin-bottom:24px;">
-      <span style="background:var(--violet);"></span>
-      <span style="background:var(--teal);"></span>
-      <span style="background:var(--pistachio);"></span>
-      <span style="background:var(--salmon);"></span>
+  <section class="gathering" aria-labelledby="gathering-title">
+    <div class="gathering-intro">
+      <h2 class="section-title" id="gathering-title">more familiar faces, more shared stories.</h2>
+      <p class="gathering-body">hodgepodge helps turn the things people share into reasons to find one another, make time, and become part of each other's lives. Not just new followers. More familiar faces, more shared stories, and more of a life that happens together.</p>
     </div>
-    <h2 class="section-headline">more life in common</h2>
-    <p class="openness-body">hodgepodge helps turn the things people share into <span class="accent-teal">reasons to find one another</span>, make time, and become part of each other's lives.</p>
-    <p class="openness-body">Not just new followers. More <span class="accent-violet">familiar faces</span>, more <span class="accent-salmon">shared stories</span>, and more of a <span class="accent-pistachio">life that happens together</span>.</p>
+    <p class="visually-hidden">example hangs</p>
+    <ul class="cards">
+      <li class="card card-iris">
+        <span class="card-pill">saved for you</span>
+        <h3 class="card-title">an evening in the west village</h3>
+        <p class="card-meta">hosted by maya · fri 7:30pm</p>
+      </li>
+      <li class="card card-persimmon">
+        <span class="card-pill">personally invited</span>
+        <h3 class="card-title">sunday brunch, park slope</h3>
+        <p class="card-meta">hosted by dev · sun 11am</p>
+      </li>
+      <li class="card card-plum">
+        <h3 class="card-title">pottery and pizza</h3>
+        <p class="card-meta">the clay room<br />hosted by <span class="card-host">sofia</span></p>
+        <div>
+          <p class="card-going">4 / 6 going</p>
+          <div class="progress" aria-hidden="true"><div class="progress-fill"></div></div>
+        </div>
+      </li>
+    </ul>
   </section>
-
-  <div class="divider"></div>
 
   <section class="waitlist-section" id="waitlist">
     <div class="waitlist-inner">
