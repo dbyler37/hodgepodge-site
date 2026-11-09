@@ -3,15 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#F3ECDF" />
   <title>hodgepodge · more life in common</title>
   <meta name="description" content="hodgepodge is a social app that brings people together in person through what they already have in common, and helps them keep meeting. the best hangs turn into a place to belong." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,700&family=DM+Sans:wght@300;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /*
+      Palette and light-mode roles. Sections use the role tokens, not the
+      palette tokens, so a dark mode can later redefine the roles only.
+      The site ships light mode only.
+    */
     :root {
+      color-scheme: light;
+
+      /* palette */
+      --plum:      #2F0E2A;
+      --cream:     #F3ECDF;
+      --pistachio: #B3D39A;
+      --iris:      #9B86F0;
+      --persimmon: #EE6A3C;
+      --ink:       #1A0A12;
+
+      /* light-mode roles */
+      --page:           var(--cream);
+      --heading:        var(--plum);
+      --text:           #2A1320;
+      --text-muted:     #67505C;
+      --card-plum:      var(--plum);
+      --on-plum:        var(--cream);
+      --on-plum-muted:  #E6D9DC;
+      --accent-on-plum: var(--pistachio);
+      --progress-track: #5A4254;
+      --control-track:  #E9DFCF;
+      --error:          #8E1F2A;
+      --line:           var(--plum);
+      --shadow:         rgba(47,14,42,0.22);
+
+      /* layout */
+      --gutter:    clamp(16px, 3.4vw, 44px);
+      --max-width: 1280px;
+
+      /* temporary: old dark tokens, removed once every section has moved */
       --bg:       #110C0F;
       --surface:  #2A1520;
       --surface2: #351a28;
@@ -19,9 +56,7 @@
       --teal:     #5B9E96;
       --violet:   #9B8FC8;
       --salmon:   #E6806F;
-      --pistachio: #9DB87A;
       --crimson:  #C45050;
-      --cream:    #EDE8DF;
       --cream-mid: rgba(237,232,223,0.55);
       --cream-low: rgba(237,232,223,0.3);
       --cream-faint: rgba(237,232,223,0.12);
@@ -30,22 +65,35 @@
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--bg);
-      color: var(--cream);
+      background: var(--page);
+      color: var(--text);
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
       line-height: 1.6;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.4;
+    .page {
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--heading);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
     }
 
     nav {
@@ -523,6 +571,7 @@
   </style>
 </head>
 <body>
+  <div class="page">
 
   <nav>
     <div style="display:flex; align-items:center; gap:12px;">
@@ -643,6 +692,7 @@
     </div>
     <p class="footer-copy">© 2026 hodgepodge</p>
   </footer>
+  </div>
 
   <script>
     window.handleSubmit = async function() {
